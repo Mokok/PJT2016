@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"/>
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous"/>
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+        
+        <link href="resources/css/createUser.css" rel="stylesheet" type="text/css"/>
+        <title>Créer un utilisateur</title>
+    </h:head>
+    <h:body>
+        <div id="userCreateBloc">
+            <h:form>
+                <h:panelGroup id="blockUsername" class="form-group #{createUserBean.successBlock.get(0)}" layout="block">
+                    <label class="control-label">Nom d'utilisateur</label>
+                    <h:inputText class="form-control" value="#{createUserBean.user.username}" required="false">
+                        <f:ajax event="blur" listener="#{createUserBean.usernameListener()}" render="usernameMessage blockUsername"/>
+                    </h:inputText>
+                    <h:outputLabel id="usernameMessage" class="control-label message">#{createUserBean.errorMessage.get(0)}</h:outputLabel>
+                </h:panelGroup>
+                
+                <h:panelGroup id="blockPassword" class="form-group #{createUserBean.successBlock.get(1)}" layout="block">
+                    <label class="control-label">Mot de passe</label>
+                    <h:inputSecret class="form-control" value="#{createUserBean.user.password}" required="false" redisplay="true" >
+                        <f:ajax event="blur" listener="#{createUserBean.passwordListener()}" render="passwordMessage blockPassword"/>
+                    </h:inputSecret>
+                    <h:outputLabel id="passwordMessage" class="control-label message">#{createUserBean.errorMessage.get(1)}</h:outputLabel>
+                </h:panelGroup>
+                
+                <h:panelGroup id="blockFirstname" class="form-group #{createUserBean.successBlock.get(2)}" layout="block">
+                    <label class="control-label">Prénom</label>
+                    <h:inputText class="form-control" value="#{createUserBean.user.firstName}" required="false">
+                        <f:ajax event="blur" listener="#{createUserBean.firstnameListener()}" render="firstnameMessage blockFirstname"/>
+                    </h:inputText>
+                    <h:outputLabel id="firstnameMessage" class="control-label message">#{createUserBean.errorMessage.get(2)}</h:outputLabel>
+                </h:panelGroup>
+                
+                <h:panelGroup id="blockLastname" class="form-group #{createUserBean.successBlock.get(3)}" layout="block">
+                    <label class="control-label">Nom</label>
+                    <h:inputText class="form-control" value="#{createUserBean.user.lastName}" required="false">
+                        <f:ajax event="blur" listener="#{createUserBean.lastnameListener()}" render="lastnameMessage blockLastname"/>
+                    </h:inputText>
+                    <h:outputLabel id="lastnameMessage" class="control-label message">#{createUserBean.errorMessage.get(3)}</h:outputLabel>
+                </h:panelGroup>
+                
+                <h:panelGroup id="blockMail" class="form-group #{createUserBean.successBlock.get(4)}" layout="block">
+                    <label class="control-label">Adresse mail</label>
+                    <h:inputText class="form-control" value="#{createUserBean.user.email}" required="false">
+                        <f:ajax event="blur" listener="#{createUserBean.mailListener()}" render="mailMessage blockMail"/>
+                    </h:inputText>
+                    <h:outputLabel id="mailMessage" class="control-label message">#{createUserBean.errorMessage.get(4)}</h:outputLabel>
+                </h:panelGroup>
+                
+                <h:commandButton class="btn btn-primary" value="Enregistrer le profil" action="#{createUserBean.register()}"/>
+                
+            </h:form>
+        </div>
+        <br />
+        <h:link outcome="welcomePrimefaces" value="Primefaces welcome page" />
+    </h:body>
+</html>
+
