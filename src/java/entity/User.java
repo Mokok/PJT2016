@@ -46,6 +46,8 @@ public class User implements Serializable
     private String password;
     @Temporal(TemporalType.DATE)
     private Date dateRegister;
+    private String googleID;
+    private String facebookID;
 
     public long getId() {
         return id;
@@ -101,6 +103,22 @@ public class User implements Serializable
 
     public void setDateRegister(Date dateRegister) {
         this.dateRegister = dateRegister;
+    }
+
+    public String getGoogleID() {
+        return googleID;
+    }
+
+    public void setGoogleID(String googleID) {
+        this.googleID = googleID;
+    }
+
+    public String getFacebookID() {
+        return facebookID;
+    }
+
+    public void setFacebookID(String facebookID) {
+        this.facebookID = facebookID;
     }
 
     

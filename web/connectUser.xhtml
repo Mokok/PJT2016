@@ -12,12 +12,16 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous"/>
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-        
+        <!-- Script connection with google login-->
+        <!--<script src="https://apis.google.com/js/platform.js" async="" defer=""></script>
+        <meta name="google-signin-client_id" content="1029998334329-7i6jhe796qua6dg57pmenecujg60aeti.apps.googleusercontent.com"/>
+        -->
         <link href="resources/css/user.css" rel="stylesheet" type="text/css"/>
         <title>Connecter un utilisateur</title>
     </h:head>
     <h:body>
-        <div id="userCreateBloc">
+        <div id="userBloc">
+            <div class="g-signin2" data-onsuccess="onSignIn"></div>
             <h:form>
                 <h:panelGroup id="blockUsername" class="form-group #{connectUserBean.successBlock.get(0)}" layout="block">
                     <label class="control-label">Nom d'utilisateur</label>
@@ -35,13 +39,24 @@
                     <h:outputLabel id="passwordMessage" class="control-label message">#{connectUserBean.errorMessage.get(1)}</h:outputLabel>
                 </h:panelGroup>
                 
-                <h:commandButton class="btn btn-primary" value="Enregistrer le profil" action="#{connectUserBean.connectUser()}">
+                <h:commandButton class="btn btn-primary" value="Connectez vous" action="#{connectUserBean.connectUser()}">
                     <f:ajax render="blockUsername usernameMessage blockPassword passwordMessage"/>
                 </h:commandButton>
             </h:form>
         </div>
         <br />
         <h:link outcome="welcomePrimefaces" value="Primefaces welcome page" />
+        <!--<script>
+            function onSignIn(googleUser) {
+                var profile = googleUser.getBasicProfile();
+                console.log('ID: ' + profile.getId); // Do not send to your backend! Use an ID token instead.
+                console.log('Name: ' + profile.getName());
+                console.log('Image URL: ' + profile.getImageUrl());
+                console.log('Email: ' + profile.getEmail());
+                
+            }
+        </script>
+        -->
     </h:body>
 </html>
 
