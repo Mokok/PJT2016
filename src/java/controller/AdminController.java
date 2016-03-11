@@ -87,12 +87,10 @@ public class AdminController {
         splitBean.splitVideoFile(video);
     }
 
-	/**
-	 * @return the configDAO
-	 */
-	public ConfigDAO getConfigDAO() {
-		return configDAO;
-	}
-    
-    
+    /**
+     * @return the configDAO
+     */
+    public ConfigDAO getConfigDAO() {
+	    return configDAO;
+    }    
 }
