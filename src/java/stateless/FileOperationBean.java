@@ -13,6 +13,10 @@ import javax.ejb.Stateless;
 
 import dao.ConfigDAO;
 import entity.Video;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
+import utils.FileUtils;
 
 /**
  *
@@ -21,18 +25,47 @@ import entity.Video;
 @Stateless
 public class FileOperationBean {
 
+    private String ffmpegPath;
     private String inputFile;
     private String outputFile;
     private String splittedFileInput;
     private String splittedFileOutput;
-    
+
     @EJB
     private ConfigDAO configDAO;
 
-    public void splitVideoFile(Video video) {
-	this.prepareStrings(video);
-	
-	final String[] cmd = new String[]{configDAO.getFFMPEGPath(),
+    /*public static void start() throws InterruptedException {
+	//RejectedExecutionHandler implementation
+	RejectedExecutionHandlerImpl rejectionHandler = new RejectedExecutionHandlerImpl();
+	//Get the ThreadFactory implementation to use
+	ThreadFactory threadFactory = Executors.defaultThreadFactory();
+	//creating the ThreadPoolExecutor
+	ThreadPoolExecutor executorPool = new ThreadPoolExecutor(2, 4, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(2), threadFactory, rejectionHandler);
+	//start the monitoring thread
+	WorkerMonitor monitor = new WorkerMonitor(executorPool, 3);
+	Thread monitorThread = new Thread(monitor);
+	monitorThread.start();
+	//submit work to the thread pool
+	for (int i = 0; i < 10; i++) {
+	    executorPool.execute(new SplitWorker());
+	}
+
+	Thread.sleep(30000);
+	//shut down the pool
+	executorPool.shutdown();
+	//shut down the monitor thread
+	Thread.sleep(5000);
+	monitor.shutdown();
+    }*/
+
+    public void testFFmpeg(Video video) {
+	try {
+	    this.prepareSplit(video);
+	} catch (IOException e) {
+	    System.err.println(e.getMessage());
+	}
+
+	final String[] cmd = new String[]{ffmpegPath,
 	    "-i",
 	    inputFile,
 	    "-f",
@@ -47,54 +80,95 @@ public class FileOperationBean {
 
 	Runtime runtime = Runtime.getRuntime();
 	try {
-	    runtime.exec(cmd);
+	    Process proc = runtime.exec(cmd);
+
+	    BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+	    BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+
+	    String s = null;
+
+	    // read the output from the command
+	    System.out.println("Here is the standard output of the command:\n");
+	    while ((s = stdInput.readLine()) != null) {
+		System.out.println(s);
+	    }
+
+	    // read any errors from the attempted command
+	    System.err.println("Here is the standard error of the command (if any):\n");
+	    while ((s = stdError.readLine()) != null) {
+		System.out.println(s);
+	    }
 	} catch (IOException ex) {
 	    Logger.getLogger(FileOperationBean.class.getName()).log(Level.SEVERE, null, ex);
 	}
     }
 
-    public void ConvertFile(Video video) {
-
-    }
-
     /**
-     * Prepares strings such as inputFile,outputFile,splittedFileInput,splittedFileOutput
-     * @param video 
+     * Prepares strings such as
+     * inputFile,outputFile,splittedFileInput,splittedFileOutput
+     *
+     * @param video
      */
-    private void prepareStrings(Video video) {
+    private void prepareSplit(Video video) throws IOException {
 	StringBuilder strBld = new StringBuilder();
-	
+	File tempFile;
+
+	ffmpegPath = configDAO.getFFMPEGPath();
+
+	//path : VideoInput innitiatl source, waitting for split
 	strBld.append(configDAO.getPathVideoInput());
 	strBld.append(video.getUser().getId());
 	strBld.append("\\");
 	strBld.append(video.getFullNameInput());
 	inputFile = configDAO.getPathVideoInput() + video.getUser().getId() + "\\" + video.getFullNameInput();
-	
-	/*strBld.setLength(0);
+	tempFile = new File(inputFile);
+	if (!tempFile.isFile()) {
+	    throw new IOException("Unreachable source file (" + inputFile + ")");
+	}
+
+	//path VideoOutput (concated and transcoded)
+	strBld.setLength(0);
 	strBld.append(configDAO.getPathVideoOutput());
 	strBld.append(video.getUser().getId());
+	//remove if exists
+	tempFile = new File(strBld.toString());
+	FileUtils.delete(tempFile);
+	//created folder path
+	tempFile.mkdirs();
 	strBld.append("\\");
 	strBld.append(video.getFullNameInput());
-	outputFile = configDAO.getPathVideoOutput() + video.getUser().getId() + "\\" + video.getFullNameInput();*/
-	
+	outputFile = configDAO.getPathVideoOutput() + video.getUser().getId() + "\\" + video.getFullNameInput();
+
+	//path : VideoSplitted\input (cut, but waitting for transcode
 	strBld.setLength(0);
 	strBld.append(configDAO.getPathVideoSplittedInput());
 	strBld.append(video.getUser().getId());
+	//remove if exists
+	tempFile = new File(strBld.toString());
+	FileUtils.delete(tempFile);
+	//created folder path
+	tempFile.mkdirs();
 	strBld.append("\\");
 	strBld.append(video.getNameInput());
 	strBld.append("%4d.");
 	strBld.append(video.getExtInput());
 	splittedFileInput = strBld.toString();
-	
-	/*strBld.setLength(0);
+
+	//path : VideoSplited\Output cut and transcoded, waitting for concat
+	strBld.setLength(0);
 	strBld.append(configDAO.getPathVideoSplittedOutput());
 	strBld.append(video.getUser().getId());
+	//remove if exists
+	tempFile = new File(strBld.toString());
+	FileUtils.delete(tempFile);
+	//created folder path
+	tempFile.mkdirs();
 	strBld.append("\\");
 	strBld.append(video.getNameOutput());
 	strBld.append("%4d.");
 	strBld.append(video.getExtOutput());
-	splittedFileOutput = strBld.toString();*/
-	
+	splittedFileOutput = strBld.toString();
+
 	strBld.setLength(0);
 	strBld = null;
     }

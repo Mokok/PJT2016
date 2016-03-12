@@ -13,76 +13,76 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
-/** 
+/**
  *
  * @author Anthony
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "listConfig", query="SELECT c FROM Config c"),
-    @NamedQuery(name = "splitTime", query="SELECT c FROM Config c WHERE c.name = 'splitTime'"),
-    @NamedQuery(name = "pathFFMPEG", query="SELECT c FROM Config c WHERE c.name = 'pathFFMPEG'"),
-    @NamedQuery(name = "pathInputFile", query="SELECT c FROM Config c WHERE c.name = 'PathInputFile'"),
-    @NamedQuery(name = "pathOutputFile", query="SELECT c FROM Config c WHERE c.name = 'PathOutputFile'"),
-    @NamedQuery(name = "pathSplittedInputFile", query="SELECT c FROM Config c WHERE c.name = 'PathSplittedInputFile'"),
-    @NamedQuery(name = "pathSplittedOutputFile", query="SELECT c FROM Config c WHERE c.name = 'PathSplittedOutputFile'")
+    @NamedQuery(name = "listConfig", query = "SELECT c FROM Config c"),
+    @NamedQuery(name = "splitTime", query = "SELECT c FROM Config c WHERE c.name = 'splitTime'"),
+    @NamedQuery(name = "pathFFMPEG", query = "SELECT c FROM Config c WHERE c.name = 'pathFFMPEG'"),
+    @NamedQuery(name = "pathInputFile", query = "SELECT c FROM Config c WHERE c.name = 'PathInputFile'"),
+    @NamedQuery(name = "pathOutputFile", query = "SELECT c FROM Config c WHERE c.name = 'PathOutputFile'"),
+    @NamedQuery(name = "pathSplittedInputFile", query = "SELECT c FROM Config c WHERE c.name = 'PathSplittedInputFile'"),
+    @NamedQuery(name = "pathSplittedOutputFile", query = "SELECT c FROM Config c WHERE c.name = 'PathSplittedOutputFile'")
 })
-public class Config implements Serializable 
-{
+public class Config implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
     private String val;
-    
+
     public Long getId() {
-        return id;
+	return id;
     }
 
     public void setId(Long id) {
-        this.id = id;
+	this.id = id;
     }
 
     public String getName() {
-        return name;
+	return name;
     }
 
     public void setName(String name) {
-        this.name = name;
+	this.name = name;
     }
 
     public String getVal() {
-        return val;
+	return val;
     }
 
     public void setVal(String val) {
-        this.val = val;
+	this.val = val;
     }
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
+	int hash = 0;
+	hash += (id != null ? id.hashCode() : 0);
+	return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Config)) {
-            return false;
-        }
-        Config other = (Config) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+	// TODO: Warning - this method won't work in the case the id fields are not set
+	if (!(object instanceof Config)) {
+	    return false;
+	}
+	Config other = (Config) object;
+	if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+	    return false;
+	}
+	return true;
     }
 
     @Override
     public String toString() {
-        return "entity.Config[ id=" + id + " ]";
+	return "entity.Config[ id=" + id + " ]";
     }
-    
+
 }

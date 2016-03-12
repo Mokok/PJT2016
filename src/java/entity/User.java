@@ -24,13 +24,13 @@ import org.hibernate.validator.constraints.Email;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "listUser", query="SELECT u FROM User u"),
-    @NamedQuery(name = "findByUserName", query="SELECT u FROM User u WHERE u.username = :username")
+    @NamedQuery(name = "listUser", query = "SELECT u FROM User u"),
+    @NamedQuery(name = "findByUserName", query = "SELECT u FROM User u WHERE u.username = :username")
 })
-public class User implements Serializable
-{
+public class User implements Serializable {
+
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
     @Id
@@ -46,57 +46,57 @@ public class User implements Serializable
     private String password;
 
     public long getId() {
-        return id;
+	return id;
     }
 
     public void setId(long id) {
-        this.id = id;
+	this.id = id;
     }
-    
-    /**
-    * @return the userName
-    */
-   public String getUserName() {
-           return username;
-   }
 
-   /**
-    * @param userName the userName to set
-    */
-   public void setUserName(String userName) {
-           this.username = userName;
-   }
+    /**
+     * @return the userName
+     */
+    public String getUserName() {
+	return username;
+    }
+
+    /**
+     * @param userName the userName to set
+     */
+    public void setUserName(String userName) {
+	this.username = userName;
+    }
 
     public String getFirstName() {
-        return firstName;
+	return firstName;
     }
 
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+	this.firstName = firstName;
     }
 
     public String getLastName() {
-        return lastName;
+	return lastName;
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+	this.lastName = lastName;
     }
 
     public String getEmail() {
-        return email;
+	return email;
     }
 
     public void setEmail(String email) {
-        this.email = email;
+	this.email = email;
     }
 
     public String getPassword() {
-        return password;
+	return password;
     }
 
     public void setPassword(String password) {
-        this.password = password;
+	this.password = password;
     }
 
     /* (non-Javadoc)
@@ -104,10 +104,10 @@ public class User implements Serializable
      */
     @Override
     public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + (int) (id ^ (id >>> 32));
-            return result;
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + (int) (id ^ (id >>> 32));
+	return result;
     }
 
     /* (non-Javadoc)
@@ -115,16 +115,20 @@ public class User implements Serializable
      */
     @Override
     public boolean equals(Object obj) {
-            if (this == obj)
-                    return true;
-            if (obj == null)
-                    return false;
-            if (getClass() != obj.getClass())
-                    return false;
-            User other = (User) obj;
-            if (id != other.id)
-                    return false;
-            return true;
+	if (this == obj) {
+	    return true;
+	}
+	if (obj == null) {
+	    return false;
+	}
+	if (getClass() != obj.getClass()) {
+	    return false;
+	}
+	User other = (User) obj;
+	if (id != other.id) {
+	    return false;
+	}
+	return true;
     }
 
     /* (non-Javadoc)
@@ -132,8 +136,7 @@ public class User implements Serializable
      */
     @Override
     public String toString() {
-            return "User [id=" + id + "]";
+	return "User [id=" + id + "]";
     }
-    
-    
+
 }

@@ -27,70 +27,64 @@ public class AdminController {
 
     @EJB
     private FileOperationBean splitBean;
-    
+
     @EJB
     private ConfigDAO configDAO;
-    
+
     /**
      * Creates a new instance of AdminController
      */
-    public AdminController() 
-    {
-    	
+    public AdminController() {
+
     }
-    
+
     /**
      * Simulation à supprimer
      */
     @PostConstruct
-    public void simulateConfig()
-    {
-    	try 
-    	{
-            configDAO.setSplitTime(3600);
-            configDAO.setFFMPEGPath("C:\\ffmpeg\\bin\\ffmpeg");
-            configDAO.setPathVideoInput("E:\\FILES\\VideoInput\\");
-            configDAO.setPathVideoOutput("E:\\FILES\\VideoOutput\\");
-            configDAO.setPathVideoSplittedInput("E:\\FILES\\VideoSplitted\\Input\\");
-            configDAO.setPathVideoSplittedOutput("E:\\FILES\\VideoSplitted\\Output\\");
-        }
-    	catch (Exception e) 
-    	{
-            e.printStackTrace();
-        }
+    public void simulateConfig() {
+	try {
+	    configDAO.setSplitTime(60);
+	    configDAO.setFFMPEGPath("E:\\ffmpeg\\bin\\ffmpeg");
+	    configDAO.setPathVideoInput("E:\\FILES\\VideoInput\\");
+	    configDAO.setPathVideoOutput("E:\\FILES\\VideoOutput\\");
+	    configDAO.setPathVideoSplittedInput("E:\\FILES\\VideoSplitted\\Input\\");
+	    configDAO.setPathVideoSplittedOutput("E:\\FILES\\VideoSplitted\\Output\\");
+	} catch (Exception e) {
+	    System.err.printf(e.getMessage());
+	}
     }
-    
+
     /**
      * Simulation à supprimer
-     * @return 
+     *
+     * @return
      */
-    public Video simulationVideoAndUser()
-    {
-    	Video video = new Video();
-        video.setExtInput("mkv");
-        video.setNameInput("LittleFockers");
-        video.setExtOutput("avi");
-        video.setNameOutput("LittleFockers");
-        
-        User user = new User();
-        user.setId(1);
-        user.setFirstName("firstName");
-        user.setLastName("lastName");
-        video.setUser(user);
-        
-        return video;
+    public Video simulationVideoAndUser() {
+	Video video = new Video();
+	video.setExtInput("avi");
+	video.setNameInput("test");
+	video.setExtOutput("mp4");
+	video.setNameOutput("test-transcoded");
+
+	User user = new User();
+	user.setId(1);
+	user.setFirstName("firstName");
+	user.setLastName("lastName");
+	video.setUser(user);
+
+	return video;
     }
-    
-    public void splitFile() 
-    {
-        Video video = simulationVideoAndUser();
-        splitBean.splitVideoFile(video);
+
+    public void splitFile() {
+	Video video = simulationVideoAndUser();
+	splitBean.testFFmpeg(video);
     }
 
     /**
      * @return the configDAO
      */
     public ConfigDAO getConfigDAO() {
-	    return configDAO;
-    }    
+	return configDAO;
+    }
 }
