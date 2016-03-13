@@ -6,6 +6,8 @@
 package core;
 
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -26,11 +28,13 @@ public class WorkerMonitor implements Runnable {
 	this.run = false;
     }
 
+    public boolean isRunning() {
+	return this.run;
+    }
+
     @Override
     public void run() {
-
 	while (run) {
-
 	    System.out.println(
 		    String.format("[monitor] [%d/%d] Active: %d, Completed: %d, Task: %d, isShutdown: %s, isTerminated: %s",
 			    this.executor.getPoolSize(),
@@ -41,15 +45,11 @@ public class WorkerMonitor implements Runnable {
 			    this.executor.isShutdown(),
 			    this.executor.isTerminated()
 		    ));
-
 	    try {
 		Thread.sleep(seconds * 1000);
-	    } catch (InterruptedException e) {
-
-		e.printStackTrace();
-
+	    } catch (InterruptedException ex) {
+		Logger.getLogger(WorkerMonitor.class.getName()).log(Level.SEVERE, null, ex);
 	    }
-
 	}
 
     }

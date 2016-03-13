@@ -9,8 +9,6 @@ package core.worker;
  *
  * @author Mokok
  */
-public class ConcatWorker extends AbstractWorker {
-
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+public enum WorkerType {
+    UNDEFINED, SPLIT, TRANSCODE, CONCAT, TEST
 }

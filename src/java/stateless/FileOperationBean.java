@@ -57,7 +57,6 @@ public class FileOperationBean {
 	Thread.sleep(5000);
 	monitor.shutdown();
     }*/
-
     public void testFFmpeg(Video video) {
 	try {
 	    this.prepareSplit(video);
@@ -85,7 +84,7 @@ public class FileOperationBean {
 	    BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 	    BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
 
-	    String s = null;
+	    String s = "";
 
 	    // read the output from the command
 	    System.out.println("Here is the standard output of the command:\n");

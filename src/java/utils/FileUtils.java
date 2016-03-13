@@ -6,7 +6,9 @@
 package utils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.NotDirectoryException;
 
 /**
  *
@@ -21,6 +23,15 @@ public class FileUtils {
 	    }
 	} else {
 	    f.delete();
+	}
+    }
+
+    public static void resetFolder(File d) throws IOException {
+	if (d.isDirectory()) {
+	    delete(d);
+	    d.mkdirs();
+	} else {
+	    throw new NotDirectoryException(d.getAbsolutePath());
 	}
     }
 }

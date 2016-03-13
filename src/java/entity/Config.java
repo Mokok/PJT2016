@@ -25,8 +25,8 @@ import javax.persistence.NamedQuery;
     @NamedQuery(name = "pathInputFile", query = "SELECT c FROM Config c WHERE c.name = 'PathInputFile'"),
     @NamedQuery(name = "pathOutputFile", query = "SELECT c FROM Config c WHERE c.name = 'PathOutputFile'"),
     @NamedQuery(name = "pathSplittedInputFile", query = "SELECT c FROM Config c WHERE c.name = 'PathSplittedInputFile'"),
-    @NamedQuery(name = "pathSplittedOutputFile", query = "SELECT c FROM Config c WHERE c.name = 'PathSplittedOutputFile'")
-})
+    @NamedQuery(name = "pathSplittedOutputFile", query = "SELECT c FROM Config c WHERE c.name = 'PathSplittedOutputFile'"),
+    @NamedQuery(name = "listFileName", query = "SELECT c FROM Config c WHERE c.name = 'ListFileName'"),})
 public class Config implements Serializable {
 
     private static final long serialVersionUID = 1L;

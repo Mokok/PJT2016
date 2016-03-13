@@ -5,9 +5,10 @@
  */
 package core;
 
+import core.worker.ThreadWorker;
+import core.worker.WorkerType;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import core.worker.SplitWorker;
 
 /**
  *
@@ -29,7 +30,8 @@ public class WorkerManager implements Runnable {
     public void run() {
 	executor = Executors.newFixedThreadPool(5);
 	for (int i = 0; i < 10; i++) {
-	    Runnable worker = new SplitWorker();
+	    //TODO: get elements in Glassfish Pool Queue
+	    Runnable worker = ThreadWorker.getWorker(WorkerType.SPLIT, null);
 	    executor.execute(worker);
 	}
 	executor.shutdown();

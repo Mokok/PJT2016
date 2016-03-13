@@ -141,4 +141,17 @@ public class ConfigDAO {
     public List<Config> getConfigList() {
 	return em.createNamedQuery("listConfig", Config.class).getResultList();
     }
+
+    public Config setListFileName(String listtxt) {
+	Config config;
+	try {
+	    config = (Config) em.createNamedQuery("listFileName", Config.class).getSingleResult();
+	} catch (NoResultException ex) {
+	    config = new Config();
+	    config.setName("listFileName");
+	}
+	config.setVal(listtxt);
+	em.persist(config);
+	return config;
+    }
 }
