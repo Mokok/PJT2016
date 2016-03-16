@@ -9,6 +9,6 @@ package core.worker;
  *
  * @author Mokok
  */
-public enum WorkerType {
-	UNDEFINED, SPLIT, TRANSCODE, CONCAT, TEST
+public class TranscodeTask extends DefaultTask {
+	
 }

@@ -16,22 +16,22 @@ import java.nio.file.NotDirectoryException;
  */
 public class FileUtils {
 
-    public static void delete(File f) throws IOException {
-	if (f.isDirectory()) {
-	    for (File c : f.listFiles()) {
-		delete(c);
-	    }
-	} else {
-	    f.delete();
+	public static void delete(File f) throws IOException {
+		if (f.isDirectory()) {
+			for (File c : f.listFiles()) {
+				delete(c);
+			}
+		} else {
+			f.delete();
+		}
 	}
-    }
 
-    public static void resetFolder(File d) throws IOException {
-	if (d.isDirectory()) {
-	    delete(d);
-	    d.mkdirs();
-	} else {
-	    throw new NotDirectoryException(d.getAbsolutePath());
+	public static void resetFolder(File d) throws IOException {
+		if (d.isDirectory()) {
+			delete(d);
+			d.mkdirs();
+		} else {
+			throw new NotDirectoryException(d.getAbsolutePath());
+		}
 	}
-    }
 }

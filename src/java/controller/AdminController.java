@@ -25,67 +25,67 @@ import stateless.FileOperationBean;
 @RequestScoped
 public class AdminController {
 
-    @EJB
-    private FileOperationBean splitBean;
+	@EJB
+	private FileOperationBean splitBean;
 
-    @EJB
-    private ConfigDAO configDAO;
+	@EJB
+	private ConfigDAO configDAO;
 
-    /**
-     * Creates a new instance of AdminController
-     */
-    public AdminController() {
+	/**
+	 * Creates a new instance of AdminController
+	 */
+	public AdminController() {
 
-    }
-
-    /**
-     * Simulation à supprimer
-     */
-    @PostConstruct
-    public void simulateConfig() {
-	try {
-	    configDAO.setSplitTime(60);
-	    configDAO.setFFMPEGPath("E:\\ffmpeg\\bin\\ffmpeg");
-	    configDAO.setPathVideoInput("E:\\FILES\\VideoInput\\");
-	    configDAO.setPathVideoOutput("E:\\FILES\\VideoOutput\\");
-	    configDAO.setPathVideoSplittedInput("E:\\FILES\\VideoSplitted\\Input\\");
-	    configDAO.setPathVideoSplittedOutput("E:\\FILES\\VideoSplitted\\Output\\");
-	    configDAO.setListFileName("list.txt");
-	} catch (Exception e) {
-	    System.err.printf(e.getMessage());
 	}
-    }
 
-    /**
-     * Simulation à supprimer
-     *
-     * @return
-     */
-    public Video simulationVideoAndUser() {
-	Video video = new Video();
-	video.setExtInput("avi");
-	video.setNameInput("test");
-	video.setExtOutput("mp4");
-	video.setNameOutput("test-transcoded");
+	/**
+	 * Simulation à supprimer
+	 */
+	@PostConstruct
+	public void simulateConfig() {
+		try {
+			configDAO.setSplitTime(60);
+			configDAO.setFFMPEGPath("E:\\ffmpeg\\bin\\ffmpeg");
+			configDAO.setPathVideoInput("E:\\FILES\\VideoInput\\");
+			configDAO.setPathVideoOutput("E:\\FILES\\VideoOutput\\");
+			configDAO.setPathVideoSplittedInput("E:\\FILES\\VideoSplitted\\Input\\");
+			configDAO.setPathVideoSplittedOutput("E:\\FILES\\VideoSplitted\\Output\\");
+			configDAO.setListFileName("list.txt");
+		} catch (Exception e) {
+			System.err.printf(e.getMessage());
+		}
+	}
 
-	User user = new User();
-	user.setId(1);
-	user.setFirstName("firstName");
-	user.setLastName("lastName");
-	video.setUser(user);
+	/**
+	 * Simulation à supprimer
+	 *
+	 * @return
+	 */
+	public Video simulationVideoAndUser() {
+		Video video = new Video();
+		video.setExtInput("avi");
+		video.setNameInput("test");
+		video.setExtOutput("mp4");
+		video.setNameOutput("test-transcoded");
 
-	return video;
-    }
+		User user = new User();
+		user.setId(1);
+		user.setFirstName("firstName");
+		user.setLastName("lastName");
+		video.setUser(user);
 
-    public void splitFile() {
-	Video video = simulationVideoAndUser();
-	splitBean.testFFmpeg(video);
-    }
+		return video;
+	}
 
-    /**
-     * @return the configDAO
-     */
-    public ConfigDAO getConfigDAO() {
-	return configDAO;
-    }
+	public void splitFile() {
+		Video video = simulationVideoAndUser();
+		splitBean.testFFmpeg(video);
+	}
+
+	/**
+	 * @return the configDAO
+	 */
+	public ConfigDAO getConfigDAO() {
+		return configDAO;
+	}
 }

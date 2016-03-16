@@ -11,20 +11,20 @@ package core.worker;
  */
 public class UndefinedThreadMorkerTypeException extends Exception {
 
-    /**
-     * Creates a new instance of <code>UndifinedThreadMorkerTypeException</code>
-     * without detail message.
-     */
-    public UndefinedThreadMorkerTypeException() {
-    }
+	/**
+	 * Creates a new instance of <code>UndifinedThreadMorkerTypeException</code>
+	 * without detail message.
+	 */
+	public UndefinedThreadMorkerTypeException() {
+	}
 
-    /**
-     * Constructs an instance of <code>UndifinedThreadMorkerTypeException</code>
-     * with the specified detail message.
-     *
-     * @param msg the detail message.
-     */
-    public UndefinedThreadMorkerTypeException(String msg) {
-	super(msg);
-    }
+	/**
+	 * Constructs an instance of <code>UndifinedThreadMorkerTypeException</code>
+	 * with the specified detail message.
+	 *
+	 * @param msg the detail message.
+	 */
+	public UndefinedThreadMorkerTypeException(String msg) {
+		super(msg);
+	}
 }

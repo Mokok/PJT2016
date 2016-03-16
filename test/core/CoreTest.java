@@ -5,14 +5,6 @@
  */
 package core;
 
-import core.worker.ThreadWorker;
-import core.worker.WorkerType;
-import entity.Video;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -26,53 +18,42 @@ import org.junit.Test;
  */
 public class CoreTest {
 
-    public CoreTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
-    /**
-     * Test of shutdown method, of class WorkerMonitor.
-     * @throws java.lang.InterruptedException
-     */
-    @Test
-    public void testShutdown() throws InterruptedException {
-	//RejectedExecutionHandler implementation
-	RejectedExecutionHandlerImpl rejectionHandler = new RejectedExecutionHandlerImpl();
-	//Get the ThreadFactory implementation to use
-	ThreadFactory threadFactory = Executors.defaultThreadFactory();
-	//creating the ThreadPoolExecutor
-	ThreadPoolExecutor executorPool = new ThreadPoolExecutor(2, 4, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<>(2), threadFactory, rejectionHandler);
-	//start the monitoring thread
-	WorkerMonitor monitor = new WorkerMonitor(executorPool, 2);
-	Thread monitorThread = new Thread(monitor);
-	monitorThread.start();
-	//submit work to the thread pool
-	for (int i = 0; i < 10; i++) {
-	    executorPool.execute(ThreadWorker.getWorker(WorkerType.TEST, new Video()));
+	public CoreTest() {
 	}
 
-	Thread.sleep(30000);
-	//shut down the pool
-	executorPool.shutdown();
-	//shut down the monitor thread
-	Thread.sleep(5000);
-	monitor.shutdown();
+	@BeforeClass
+	public static void setUpClass() {
+	}
 
-	assertFalse(monitor.isRunning());
-    }
+	@AfterClass
+	public static void tearDownClass() {
+	}
+
+	@Before
+	public void setUp() {
+	}
+
+	@After
+	public void tearDown() {
+	}
+
+	/**
+	 * Test of shutdown method, of class WorkerMonitor.
+	 *
+	 * @throws java.lang.InterruptedException
+	 */
+	@Test
+	public void testMoreThanPoolSize() throws InterruptedException {
+		ThreadManager manager = new ThreadManager(6);
+		//start the monitoring thread
+		ThreadMonitor monitor = new ThreadMonitor(manager.getExecutor(), 2);
+		Thread monitorThread = new Thread(monitor);
+		monitorThread.start();
+		//submit work to the thread pool
+		manager.run();
+		Thread.sleep(3 * 1000);
+		monitor.shutdown();
+		assertFalse(monitor.isRunning());
+		assertTrue(manager.getExecutor().isTerminated());
+	}
 }
