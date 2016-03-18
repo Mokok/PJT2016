@@ -5,10 +5,18 @@
  */
 package core.worker;
 
+import entity.Video;
+import java.io.IOException;
+
 /**
  *
  * @author Mokok
  */
-public class DefaultTask {
-	
+public interface ITask {
+
+	public String computeCmd() throws IOException;
+
+	abstract String getOptions();
+
+	public Video getVideo();
 }

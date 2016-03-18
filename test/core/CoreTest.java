@@ -5,6 +5,10 @@
  */
 package core;
 
+import core.worker.CoreTask;
+import core.worker.SplitTask;
+import entity.User;
+import entity.Video;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -43,7 +47,7 @@ public class CoreTest {
 	 * @throws java.lang.InterruptedException
 	 */
 	@Test
-	public void testMoreThanPoolSize() throws InterruptedException {
+	public void testPoolBehavior() throws InterruptedException {
 		ThreadManager manager = new ThreadManager(6);
 		//start the monitoring thread
 		ThreadMonitor monitor = new ThreadMonitor(manager.getExecutor(), 2);
@@ -52,8 +56,44 @@ public class CoreTest {
 		//submit work to the thread pool
 		manager.run();
 		Thread.sleep(3 * 1000);
-		monitor.shutdown();
+		manager.stop();
+		monitor.stop();
 		assertFalse(monitor.isRunning());
 		assertTrue(manager.getExecutor().isTerminated());
+	}
+
+	@Test
+	public void testSplit() throws InterruptedException {
+		Video video = new Video();
+		video.setExtInput("avi");
+		video.setNameInput("test");
+		video.setExtOutput("mp4");
+		video.setNameOutput("test-transcoded");
+
+		User user = new User();
+		user.setId(1);
+		user.setFirstName("firstName");
+		user.setLastName("lastName");
+		video.setUser(user);
+
+		ThreadManager manager = new ThreadManager(6);
+		//start the monitoring thread
+		ThreadMonitor monitor = new ThreadMonitor(manager.getExecutor(), 2);
+		Thread monitorThread = new Thread(monitor);
+		monitorThread.start();
+		//submit work to the thread pool
+		manager.run();
+
+		Thread.sleep(3 * 1000);
+
+		//add the video-to-split-test
+		CoreTask task = new SplitTask(video);
+		Runnable worker = ThreadTask.createNewThreadTask(task);
+		manager.getExecutor().execute(worker);
+
+		Thread.sleep(3 * 1000);
+		manager.stop();
+		monitor.stop();
+		fail("check configDAO access during test run");
 	}
 }

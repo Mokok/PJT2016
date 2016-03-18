@@ -24,7 +24,7 @@ public class ThreadMonitor implements Runnable {
 		this.seconds = delay;
 	}
 
-	public void shutdown() {
+	public void stop() {
 		this.run = false;
 	}
 
@@ -46,7 +46,7 @@ public class ThreadMonitor implements Runnable {
 							this.executor.isTerminated()
 					));
 			try {
-				Thread.sleep(seconds * 1000);
+				Thread.sleep(seconds * 1000L);
 			} catch (InterruptedException ex) {
 				Logger.getLogger(ThreadMonitor.class.getName()).log(Level.SEVERE, null, ex);
 			}

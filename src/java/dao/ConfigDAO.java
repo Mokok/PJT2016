@@ -56,6 +56,11 @@ public class ConfigDAO {
 		return config.getVal();
 	}
 
+	public String getListFileName() {
+		Config config = (Config) em.createNamedQuery("listFileName", Config.class).getSingleResult();
+		return config.getVal();
+	}
+
 	public Config setSplitTime(int seconds) throws Exception {
 		if (seconds <= 0) {
 			throw new Exception("le temps en seconde doit être positif");
@@ -138,10 +143,6 @@ public class ConfigDAO {
 		return config;
 	}
 
-	public List<Config> getConfigList() {
-		return em.createNamedQuery("listConfig", Config.class).getResultList();
-	}
-
 	public Config setListFileName(String listtxt) {
 		Config config;
 		try {
@@ -153,5 +154,9 @@ public class ConfigDAO {
 		config.setVal(listtxt);
 		em.persist(config);
 		return config;
+	}
+
+	public List<Config> getConfigList() {
+		return em.createNamedQuery("listConfig", Config.class).getResultList();
 	}
 }

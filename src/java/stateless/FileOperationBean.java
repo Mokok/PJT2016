@@ -34,29 +34,6 @@ public class FileOperationBean {
 	@EJB
 	private ConfigDAO configDAO;
 
-	/*public static void start() throws InterruptedException {
-	//RejectedExecutionHandler implementation
-	RejectedExecutionHandlerImpl rejectionHandler = new RejectedExecutionHandlerImpl();
-	//Get the ThreadFactory implementation to use
-	ThreadFactory threadFactory = Executors.defaultThreadFactory();
-	//creating the ThreadPoolExecutor
-	ThreadPoolExecutor executorPool = new ThreadPoolExecutor(2, 4, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(2), threadFactory, rejectionHandler);
-	//start the monitoring thread
-	WorkerMonitor monitor = new WorkerMonitor(executorPool, 3);
-	Thread monitorThread = new Thread(monitor);
-	monitorThread.start();
-	//submit work to the thread pool
-	for (int i = 0; i < 10; i++) {
-	    executorPool.execute(new SplitWorker());
-	}
-
-	Thread.sleep(30000);
-	//shut down the pool
-	executorPool.shutdown();
-	//shut down the monitor thread
-	Thread.sleep(5000);
-	monitor.shutdown();
-    }*/
 	public void testFFmpeg(Video video) {
 		try {
 			this.prepareSplit(video);
@@ -84,7 +61,7 @@ public class FileOperationBean {
 			BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 			BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
 
-			String s = "";
+			String s;
 
 			// read the output from the command
 			System.out.println("Here is the standard output of the command:\n");

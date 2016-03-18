@@ -50,7 +50,7 @@ public class AdminController {
 			configDAO.setPathVideoOutput("E:\\FILES\\VideoOutput\\");
 			configDAO.setPathVideoSplittedInput("E:\\FILES\\VideoSplitted\\Input\\");
 			configDAO.setPathVideoSplittedOutput("E:\\FILES\\VideoSplitted\\Output\\");
-			configDAO.setListFileName("list.txt");
+			configDAO.setListFileName("list.ffconcat");
 		} catch (Exception e) {
 			System.err.printf(e.getMessage());
 		}

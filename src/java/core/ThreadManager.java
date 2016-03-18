@@ -5,9 +5,7 @@
  */
 package core;
 
-import core.worker.TaskThread;
-import core.worker.WorkerType;
-import entity.Video;
+import core.worker.CoreTask;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -23,7 +21,7 @@ import java.util.logging.Logger;
 public class ThreadManager implements Runnable {
 
 	private final int poolSize;
-	private ThreadPoolExecutor executor;
+	private final ThreadPoolExecutor executor;
 
 	public ThreadManager(int maxNumberOfWorker) {
 		poolSize = maxNumberOfWorker;
@@ -45,11 +43,16 @@ public class ThreadManager implements Runnable {
 
 	@Override
 	public void run() {
+		Runnable worker;
 		for (int i = 0; i < 10; i++) {
-			//TODO: get elements in Glassfish Pool Queue
-			Runnable worker = TaskThread.getWorker(WorkerType.TEST, new Video());
+			//TODO: get elements from Glassfish Pool Queue
+			worker = ThreadTask.createNewThreadTask(new CoreTask());
 			executor.execute(worker);
 		}
+		//stop();
+	}
+
+	public void stop() {
 		executor.shutdown();
 		while (!executor.isTerminated()) {
 			try {
