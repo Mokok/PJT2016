@@ -10,17 +10,13 @@ import entity.Video;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
 
 /**
  *
  * @author Mokok
  */
-@Stateless
 public class CoreTask implements ITask {
 
-	@EJB
 	private static ConfigDAO configDAO;
 
 	private final Video video;
