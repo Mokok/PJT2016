@@ -26,13 +26,23 @@ public class ConfigDAO {
 	@PersistenceContext(unitName = "CorePU")
 	private EntityManager em;
 
-	public int getSplitTime() {
-		Config config = (Config) em.createNamedQuery("splitTime", Config.class).getSingleResult();
+	public int getMaxSplitTime() {
+		Config config = (Config) em.createNamedQuery("maxSplitTime", Config.class).getSingleResult();
+		return Integer.parseInt(config.getVal());
+	}
+	
+	public int getMinSplitTimeDuration() {
+		Config config = (Config) em.createNamedQuery("minSplitTimeDuration", Config.class).getSingleResult();
 		return Integer.parseInt(config.getVal());
 	}
 
 	public String getFFMPEGPath() {
 		Config config = (Config) em.createNamedQuery("pathFFMPEG", Config.class).getSingleResult();
+		return config.getVal();
+	}
+	
+	public String getFFProbePath() {
+		Config config = (Config) em.createNamedQuery("pathFFProbe", Config.class).getSingleResult();
 		return config.getVal();
 	}
 
@@ -60,18 +70,35 @@ public class ConfigDAO {
 		Config config = (Config) em.createNamedQuery("listFileName", Config.class).getSingleResult();
 		return config.getVal();
 	}
-
-	public Config setSplitTime(int seconds) throws Exception {
+	
+	private Config setMinSplitTimeDuration(int seconds) throws Exception {
 		if (seconds <= 0) {
 			throw new Exception("le temps en seconde doit être positif");
 		}
 
 		Config config;
 		try {
-			config = (Config) em.createNamedQuery("splitTime", Config.class).getSingleResult();
+			config = (Config) em.createNamedQuery("minSplitTimeDuration", Config.class).getSingleResult();
 		} catch (NoResultException ex) {
 			config = new Config();
-			config.setName("splitTime");
+			config.setName("minSplitTimeDuration");
+		}
+		config.setVal(Integer.toString(seconds));
+		em.persist(config);
+		return config;
+	}
+
+	public Config setMaxSplitTime(int seconds) throws Exception {
+		if (seconds <= 0) {
+			throw new Exception("le temps en seconde doit être positif");
+		}
+
+		Config config;
+		try {
+			config = (Config) em.createNamedQuery("maxSplitTime", Config.class).getSingleResult();
+		} catch (NoResultException ex) {
+			config = new Config();
+			config.setName("maxSplitTime");
 		}
 		config.setVal(Integer.toString(seconds));
 		em.persist(config);
@@ -85,6 +112,19 @@ public class ConfigDAO {
 		} catch (NoResultException ex) {
 			config = new Config();
 			config.setName("pathFFMPEG");
+		}
+		config.setVal(path);
+		em.persist(config);
+		return config;
+	}
+	
+	public Config setFFProbePath(String path) {
+		Config config;
+		try {
+			config = (Config) em.createNamedQuery("pathFFProbe", Config.class).getSingleResult();
+		} catch (NoResultException ex) {
+			config = new Config();
+			config.setName("pathFFProbe");
 		}
 		config.setVal(path);
 		em.persist(config);
@@ -158,5 +198,17 @@ public class ConfigDAO {
 
 	public List<Config> getConfigList() {
 		return em.createNamedQuery("listConfig", Config.class).getResultList();
+	}
+	
+	public void setDefaultConfig() throws Exception {
+			this.setMaxSplitTime(15);
+			this.setMinSplitTimeDuration(120);
+			this.setFFMPEGPath("E:\\ffmpeg\\bin\\ffmpeg");
+			this.setFFProbePath("E:\\ffmpeg\\bin\\ffprobe");
+			this.setPathVideoInput("E:\\FILES\\VideoInput\\");
+			this.setPathVideoOutput("E:\\FILES\\VideoOutput\\");
+			this.setPathVideoSplittedInput("E:\\FILES\\VideoSplitted\\Input\\");
+			this.setPathVideoSplittedOutput("E:\\FILES\\VideoSplitted\\Output\\");
+			this.setListFileName("list.ffconcat");
 	}
 }

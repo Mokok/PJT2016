@@ -6,6 +6,7 @@
 package core;
 
 import core.worker.CoreTask;
+import core.worker.SplitTask;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -23,6 +24,10 @@ public class ThreadManager implements Runnable {
 	private final int poolSize;
 	private final ThreadPoolExecutor executor;
 
+	protected ThreadManager() {
+		this(10);
+	}
+
 	public ThreadManager(int maxNumberOfWorker) {
 		poolSize = maxNumberOfWorker;
 		//RejectedExecutionHandler implementation
@@ -37,19 +42,33 @@ public class ThreadManager implements Runnable {
 		return poolSize;
 	}
 
-	public ThreadPoolExecutor getExecutor() {
+	ThreadPoolExecutor getExecutor() {
 		return executor;
 	}
 
+	/** Warning !
+	 * 
+	 */
 	@Override
 	public void run() {
-		Runnable worker;
+		ThreadTask task;
 		for (int i = 0; i < 10; i++) {
 			//TODO: get elements from Glassfish Pool Queue
-			worker = ThreadTask.createNewThreadTask(new CoreTask());
-			executor.execute(worker);
+			task = ThreadTask.createNewThreadTask(new CoreTask());
+			addSpecTask(task);
 		}
 		//stop();
+	}
+
+	public void addSpecTask(ThreadTask task) {
+		executor.execute(task);
+	}
+	
+	public void addTask(ThreadTask task) {
+		executor.execute(task);
+		if(task.getTask() instanceof SplitTask){
+			//if()
+		}
 	}
 
 	public void stop() {

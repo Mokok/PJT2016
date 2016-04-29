@@ -9,25 +9,33 @@ import core.worker.ConcatTask;
 import core.worker.CoreTask;
 import core.worker.SplitTask;
 import core.worker.TranscodeTask;
+import dao.ConfigDAO;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
 
 /**
  *
  * @author Mokok
  */
+@Stateless
 public class ThreadTask implements Runnable {
+
+	@EJB
+	public ConfigDAO configDAO;
 
 	private CoreTask task;
 
-	public ThreadTask() {
+	protected ThreadTask() {
 	}
 
 	private ThreadTask(CoreTask task) {
+		this();
 		this.task = task;
 	}
 

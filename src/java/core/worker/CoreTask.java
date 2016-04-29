@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  */
 public class CoreTask implements ITask {
 
-	private static ConfigDAO configDAO;
+	private ConfigDAO configDAO;
 
 	private final Video video;
 	private String cmd;
@@ -53,8 +53,13 @@ public class CoreTask implements ITask {
 		return video;
 	}
 
-	public static ConfigDAO getConfig() {
+	@Override
+	public ConfigDAO getConfig() {
 		return configDAO;
+	}
+	
+	public void setConfig(ConfigDAO config){
+		configDAO = config;
 	}
 
 	@Override

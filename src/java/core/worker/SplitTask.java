@@ -6,9 +6,14 @@
 package core.worker;
 
 import entity.Video;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import stateless.FileOperationBean;
 
 /**
  *
@@ -16,12 +21,8 @@ import java.io.IOException;
  */
 public class SplitTask extends CoreTask {
 
-	private static final String OPTIONS = "-f segment -segment_times 10,20,30 -map 0 -vcodec copy -acodec copy -segment_list";
-
-	private SplitTask() {
-
-	}
-
+	private static final String OPTIONS = "-f segment -segment_times ";
+	private static final String OPTIONS2 = " -c copy -map 0 -segment_list ";
 	public SplitTask(Video video) {
 		super(video);
 	}
@@ -53,13 +54,22 @@ public class SplitTask extends CoreTask {
 			strBld.append(inPath.toString());
 		}
 		strBld.append(" ");
-		//add split-specific options
-		strBld.append(OPTIONS);
+		//add split-specific options (times)
+		{
+			String timers = computeSplitTimers();
+			if(!timers.equals("")){
+				strBld.append(OPTIONS);
+				strBld.append(computeSplitTimers());
+				strBld.append(" ");
+			}
+		}
+		//add split-specific options (list)
+		strBld.append(OPTIONS2);
 		strBld.append(" ");
 		//add option for list-file creation
 		{
 			StringBuilder listPath = new StringBuilder();
-			listPath.append(getConfig().getPathVideoInput());
+			listPath.append(getConfig().getPathVideoSplittedInput());
 			listPath.append(getVideo().getUser().getId());
 			listPath.append("\\");
 			listPath.append(getVideo().getFullNameInput());
@@ -84,5 +94,70 @@ public class SplitTask extends CoreTask {
 			strBld.append(outPath.toString());
 		}
 		return strBld.toString();
+	}
+
+	/**
+	 * Max : config.maxSplitTime | Min : config.minSplitTimeDuration
+	 * @return list of times to split 
+	 */
+	private String computeSplitTimers(){
+		StringBuilder timers = new StringBuilder();
+		int maxSplitTime = getConfig().getMaxSplitTime();
+		int minSplitTimeDuration = getConfig().getMinSplitTimeDuration();
+		int videoDuration = getVideoDuration();
+		int numberOfSlice = Integer.min(maxSplitTime, videoDuration/minSplitTimeDuration);
+		
+		if(numberOfSlice != 0){
+			int splitDuration = videoDuration/numberOfSlice;
+			timers.append(splitDuration);
+			for(int i = 2 ; i < numberOfSlice ; i++){
+				timers.append(",");
+				timers.append(String.valueOf(splitDuration*i));
+			}
+		}
+				
+		return timers.toString();
+	}
+	
+	private int getVideoDuration() {
+		StringBuilder strCmd = new StringBuilder();
+		strCmd.append(getConfig().getFFProbePath());
+		strCmd.append(" -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 ");
+		strCmd.append(getConfig().getPathVideoInput());
+		strCmd.append("\\");
+		strCmd.append(getVideo().getUser().getId());
+		strCmd.append("\\");
+		strCmd.append(getVideo().getFullNameInput());
+		
+		
+		Runtime runtime = Runtime.getRuntime();
+		StringBuilder strBld = new StringBuilder();
+		try {
+			Process proc = runtime.exec(strCmd.toString());
+			
+			BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+			BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+
+			String s;
+
+			// read the output from the command
+			System.out.println("Here is the standard output of the command:\n");
+			while ((s = stdInput.readLine()) != null) {
+				System.out.println(s);
+				strBld.append(s);
+				strBld.append("\n");
+			}
+
+			// read any errors from the attempted command
+			System.err.println("Here is the standard error of the command (if any):\n");
+			while ((s = stdError.readLine()) != null) {
+				System.out.println(s);
+				strBld.append(s);
+				strBld.append("\n");
+			}
+		} catch (IOException ex) {
+			Logger.getLogger(FileOperationBean.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		return (int) Math.floor(Float.valueOf(strBld.toString().trim()));
 	}
 }

@@ -20,8 +20,10 @@ import javax.persistence.NamedQuery;
 @Entity
 @NamedQueries({
 	@NamedQuery(name = "listConfig", query = "SELECT c FROM Config c"),
-	@NamedQuery(name = "splitTime", query = "SELECT c FROM Config c WHERE c.name = 'splitTime'"),
+	@NamedQuery(name = "maxSplitTime", query = "SELECT c FROM Config c WHERE c.name = 'maxSplitTime'"),
+	@NamedQuery(name = "minSplitTimeDuration", query = "SELECT c FROM Config c WHERE c.name = 'minSplitTimeDuration'"),
 	@NamedQuery(name = "pathFFMPEG", query = "SELECT c FROM Config c WHERE c.name = 'pathFFMPEG'"),
+	@NamedQuery(name = "pathFFProbe", query = "SELECT c FROM Config c WHERE c.name = 'pathFFProbe'"),
 	@NamedQuery(name = "pathInputFile", query = "SELECT c FROM Config c WHERE c.name = 'PathInputFile'"),
 	@NamedQuery(name = "pathOutputFile", query = "SELECT c FROM Config c WHERE c.name = 'PathOutputFile'"),
 	@NamedQuery(name = "pathSplittedInputFile", query = "SELECT c FROM Config c WHERE c.name = 'PathSplittedInputFile'"),

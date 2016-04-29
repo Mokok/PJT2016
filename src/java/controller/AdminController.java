@@ -15,6 +15,9 @@ import entity.User;
 import javax.enterprise.context.RequestScoped;
 
 import entity.Video;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import stateless.FileOperationBean;
 
 /**
@@ -31,6 +34,8 @@ public class AdminController {
 	@EJB
 	private ConfigDAO configDAO;
 
+	private String res;
+	
 	/**
 	 * Creates a new instance of AdminController
 	 */
@@ -44,15 +49,9 @@ public class AdminController {
 	@PostConstruct
 	public void simulateConfig() {
 		try {
-			configDAO.setSplitTime(60);
-			configDAO.setFFMPEGPath("E:\\ffmpeg\\bin\\ffmpeg");
-			configDAO.setPathVideoInput("E:\\FILES\\VideoInput\\");
-			configDAO.setPathVideoOutput("E:\\FILES\\VideoOutput\\");
-			configDAO.setPathVideoSplittedInput("E:\\FILES\\VideoSplitted\\Input\\");
-			configDAO.setPathVideoSplittedOutput("E:\\FILES\\VideoSplitted\\Output\\");
-			configDAO.setListFileName("list.ffconcat");
-		} catch (Exception e) {
-			System.err.printf(e.getMessage());
+			configDAO.setDefaultConfig();
+		} catch (Exception ex) {
+			Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
@@ -82,6 +81,18 @@ public class AdminController {
 		splitBean.testFFmpeg(video);
 	}
 
+	public void testComputeCmd() throws IOException{
+		res = splitBean.test();
+	}
+	
+	public void testDuration(){
+		res = splitBean.testDuration();
+	}
+	
+	public String displayRes(){
+		return res;
+	}
+	
 	/**
 	 * @return the configDAO
 	 */

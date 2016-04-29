@@ -5,6 +5,7 @@
  */
 package core.worker;
 
+import dao.ConfigDAO;
 import entity.Video;
 import java.io.IOException;
 
@@ -19,4 +20,6 @@ public interface ITask {
 	abstract String getOptions();
 
 	public Video getVideo();
+
+	public ConfigDAO getConfig();
 }

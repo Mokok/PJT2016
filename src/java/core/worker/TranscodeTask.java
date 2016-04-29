@@ -15,10 +15,6 @@ public class TranscodeTask extends CoreTask {
 
 	private static final String OPTIONS = "";
 
-	private TranscodeTask() {
-
-	}
-
 	public TranscodeTask(Video video) {
 		super(video);
 	}

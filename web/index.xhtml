@@ -9,9 +9,11 @@
     <body>
 	Hello from Facelets
 	<h:form>
-	    <h:commandButton action="#{adminController.splitFile}" />
-	    #{adminController.configDAO.pathVideoInput}
+	    <h:commandButton action="#{adminController.testComputeCmd()}" />
+	    <h:commandButton action="#{adminController.testDuration()}" />
 
+	    
+	    #{adminController.displayRes()}
 	</h:form>
     </body>
 </html>
