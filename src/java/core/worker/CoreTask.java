@@ -16,20 +16,12 @@ import java.util.logging.Logger;
  * @author Mokok
  */
 public class CoreTask implements ITask {
-
-	private ConfigDAO configDAO;
-
+	
+	private ConfigDAO config;
+	
 	private final Video video;
 	private String cmd;
 	private static final String OPTIONS = "";
-
-	/**
-	 * This constructor should only be used as default empty constructor, and is
-	 * not able to perform anything.
-	 */
-	public CoreTask() {
-		video = new Video();
-	}
 
 	public CoreTask(Video video) {
 		this.video = video;
@@ -55,11 +47,11 @@ public class CoreTask implements ITask {
 
 	@Override
 	public ConfigDAO getConfig() {
-		return configDAO;
+		return config;
 	}
 	
-	public void setConfig(ConfigDAO config){
-		configDAO = config;
+	public void setConfig(ConfigDAO configDAO){
+		config = configDAO;
 	}
 
 	@Override

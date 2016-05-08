@@ -5,6 +5,8 @@
  */
 package stateless;
 
+import core.ThreadManager;
+import core.ThreadMonitor;
 import core.ThreadTask;
 import core.worker.CoreTask;
 import core.worker.SplitTask;
@@ -170,7 +172,7 @@ public class FileOperationBean {
 		System.out.println("computeCmd");		
 		CoreTask task = new SplitTask(video);
 		ThreadTask worker = ThreadTask.createNewThreadTask(task);
-		task.setConfig(configDAO);
+		//task.setConfig(configDAO);
 		return task.computeCmd();
 	}
 
@@ -226,6 +228,40 @@ public class FileOperationBean {
 			Logger.getLogger(FileOperationBean.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		return strBld.toString();
+	}
+
+	public void testSplit() throws InterruptedException {
+		Video video = new Video();
+		video.setExtInput("avi");
+		video.setNameInput("test2");
+		video.setExtOutput("mp4");
+		video.setNameOutput(video.getNameInput()+"_transcoded");
+
+		User user = new User();
+		user.setId(1);
+		user.setFirstName("firstName");
+		user.setLastName("lastName");
+		video.setUser(user);
+
+		ThreadManager manager = new ThreadManager(6);
+		//start the monitoring thread
+		ThreadMonitor monitor = new ThreadMonitor(manager.getExecutor(), 2);
+		Thread monitorThread = new Thread(monitor);
+		monitorThread.start();
+		//submit work to the thread pool
+		manager.run();
+
+		Thread.sleep(3 * 1000);
+
+		//add the video-to-split-test
+		CoreTask task = new SplitTask(video);
+		ThreadTask worker = ThreadTask.createNewThreadTask(task);
+		worker.config = configDAO;
+		manager.addSpecTask(worker);
+
+		Thread.sleep(3 * 1000);
+		manager.stop();
+		monitor.stop();
 	}
 
 	

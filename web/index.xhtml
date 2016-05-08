@@ -9,10 +9,10 @@
     <body>
 	Hello from Facelets
 	<h:form>
-	    <h:commandButton action="#{adminController.testComputeCmd()}" />
-	    <h:commandButton action="#{adminController.testDuration()}" />
-
 	    
+	    <h:commandButton action="#{adminController.testComputeCmd()}" value="testComuteCmd"/>
+	    <h:commandButton action="#{adminController.testDuration()}" value="testDuration"/>
+	    <h:commandButton action="#{adminController.testSplit()}" value="testSplit"/>
 	    #{adminController.displayRes()}
 	</h:form>
     </body>

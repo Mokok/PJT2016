@@ -7,6 +7,7 @@ package core;
 
 import core.worker.CoreTask;
 import core.worker.SplitTask;
+import entity.Video;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -42,7 +43,7 @@ public class ThreadManager implements Runnable {
 		return poolSize;
 	}
 
-	ThreadPoolExecutor getExecutor() {
+	public ThreadPoolExecutor getExecutor() {
 		return executor;
 	}
 
@@ -52,9 +53,10 @@ public class ThreadManager implements Runnable {
 	@Override
 	public void run() {
 		ThreadTask task;
+		Video video = new Video();
 		for (int i = 0; i < 10; i++) {
 			//TODO: get elements from Glassfish Pool Queue
-			task = ThreadTask.createNewThreadTask(new CoreTask());
+			task = ThreadTask.createNewThreadTask(new CoreTask(video));
 			addSpecTask(task);
 		}
 		//stop();

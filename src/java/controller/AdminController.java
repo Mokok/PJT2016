@@ -89,6 +89,14 @@ public class AdminController {
 		res = splitBean.testDuration();
 	}
 	
+	public void testSplit(){
+		try {
+			splitBean.testSplit();
+		} catch (InterruptedException ex) {
+			Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+	
 	public String displayRes(){
 		return res;
 	}

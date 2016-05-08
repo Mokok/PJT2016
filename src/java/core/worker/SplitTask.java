@@ -5,6 +5,7 @@
  */
 package core.worker;
 
+import dao.ConfigDAO;
 import entity.Video;
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.EJB;
 import stateless.FileOperationBean;
 
 /**
@@ -20,9 +22,13 @@ import stateless.FileOperationBean;
  * @author Mokok
  */
 public class SplitTask extends CoreTask {
+	
+	@EJB
+	public ConfigDAO config;
 
 	private static final String OPTIONS = "-f segment -segment_times ";
 	private static final String OPTIONS2 = " -c copy -map 0 -segment_list ";
+	
 	public SplitTask(Video video) {
 		super(video);
 	}
@@ -39,12 +45,12 @@ public class SplitTask extends CoreTask {
 	public String computeCmd() throws IOException {
 		StringBuilder strBld = new StringBuilder();
 		//add ffmpeg exe path
-		strBld.append(getConfig().getFFMPEGPath());
+		strBld.append(config.getFFMPEGPath());
 		//add path to source file
 		strBld.append(" -i ");
 		{
 			StringBuilder inPath = new StringBuilder();
-			inPath.append(getConfig().getPathVideoInput());
+			inPath.append(config.getPathVideoInput());
 			inPath.append(this.getVideo().getUser().getId());
 			inPath.append("\\");
 			inPath.append(getVideo().getFullNameInput());
@@ -69,20 +75,20 @@ public class SplitTask extends CoreTask {
 		//add option for list-file creation
 		{
 			StringBuilder listPath = new StringBuilder();
-			listPath.append(getConfig().getPathVideoSplittedInput());
+			listPath.append(config.getPathVideoSplittedInput());
 			listPath.append(getVideo().getUser().getId());
 			listPath.append("\\");
 			listPath.append(getVideo().getFullNameInput());
 			listPath.append("\\");
 			new File(listPath.toString()).mkdirs();
-			listPath.append(getConfig().getListFileName());
+			listPath.append(config.getListFileName());
 			strBld.append(listPath.toString());
 		}
 		strBld.append(" ");
 		//add path to output
 		{
 			StringBuilder outPath = new StringBuilder();
-			outPath.append(getConfig().getPathVideoSplittedInput());
+			outPath.append(config.getPathVideoSplittedInput());
 			outPath.append(getVideo().getUser().getId());
 			outPath.append("\\");
 			outPath.append(getVideo().getNameInput());
@@ -102,8 +108,8 @@ public class SplitTask extends CoreTask {
 	 */
 	private String computeSplitTimers(){
 		StringBuilder timers = new StringBuilder();
-		int maxSplitTime = getConfig().getMaxSplitTime();
-		int minSplitTimeDuration = getConfig().getMinSplitTimeDuration();
+		int maxSplitTime = config.getMaxSplitTime();
+		int minSplitTimeDuration = config.getMinSplitTimeDuration();
 		int videoDuration = getVideoDuration();
 		int numberOfSlice = Integer.min(maxSplitTime, videoDuration/minSplitTimeDuration);
 		
@@ -121,9 +127,9 @@ public class SplitTask extends CoreTask {
 	
 	private int getVideoDuration() {
 		StringBuilder strCmd = new StringBuilder();
-		strCmd.append(getConfig().getFFProbePath());
+		strCmd.append(config.getFFProbePath());
 		strCmd.append(" -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 ");
-		strCmd.append(getConfig().getPathVideoInput());
+		strCmd.append(config.getPathVideoInput());
 		strCmd.append("\\");
 		strCmd.append(getVideo().getUser().getId());
 		strCmd.append("\\");

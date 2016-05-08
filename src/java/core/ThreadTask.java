@@ -27,20 +27,20 @@ import javax.ejb.Stateless;
 public class ThreadTask implements Runnable {
 
 	@EJB
-	public ConfigDAO configDAO;
-
+	public ConfigDAO config;
 	private CoreTask task;
 
 	protected ThreadTask() {
 	}
 
-	private ThreadTask(CoreTask task) {
-		this();
+	public void insertTask(CoreTask task) {
 		this.task = task;
+		task.setConfig(config);
 	}
 
 	public static ThreadTask createNewThreadTask(CoreTask task) {
-		ThreadTask result = new ThreadTask(task);
+		ThreadTask result = new ThreadTask();
+		result.insertTask(task);
 		return result;
 	}
 
