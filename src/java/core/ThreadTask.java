@@ -35,7 +35,7 @@ public class ThreadTask implements Runnable {
 
 	public void insertTask(CoreTask task) {
 		this.task = task;
-		task.setConfig(config);
+		//task.setConfig(config);
 	}
 
 	public static ThreadTask createNewThreadTask(CoreTask task) {
@@ -55,19 +55,20 @@ public class ThreadTask implements Runnable {
 			processTask();
 		} else {
 			System.out.println("Info  : running");
-		}
-		try {
+			try {
 			Thread.sleep((new Random().nextInt(5) + 3) * 1000L);
-		} catch (InterruptedException ex) {
-			Logger.getLogger(ThreadTask.class.getName()).log(Level.SEVERE, null, ex);
+			} catch (InterruptedException ex) {
+				Logger.getLogger(ThreadTask.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		}
+		
 		System.out.println("Stop  : " + Thread.currentThread().getName() + " Type : " + task.getClass().getName());
 	}
 
 	private void processTask() {
 		Runtime runtime = Runtime.getRuntime();
 		try {
-			Process proc = runtime.exec(this.getTask().toString());
+			Process proc = runtime.exec(this.getTask().computeCmd());
 
 			BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 			BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));

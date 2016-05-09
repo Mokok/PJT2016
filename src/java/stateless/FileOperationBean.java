@@ -22,6 +22,7 @@ import entity.Video;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import javax.ejb.LocalBean;
 import utils.FileUtils;
 
 /**
@@ -29,6 +30,7 @@ import utils.FileUtils;
  * @author Anthony
  */
 @Stateless
+@LocalBean
 public class FileOperationBean {
 
 	private String ffmpegPath;
@@ -256,8 +258,7 @@ public class FileOperationBean {
 		//add the video-to-split-test
 		CoreTask task = new SplitTask(video);
 		ThreadTask worker = ThreadTask.createNewThreadTask(task);
-		worker.config = configDAO;
-		manager.addSpecTask(worker);
+		manager.addTask(worker);
 
 		Thread.sleep(3 * 1000);
 		manager.stop();

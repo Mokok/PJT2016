@@ -5,16 +5,28 @@
  */
 package core.worker;
 
+import dao.ConfigDAO;
 import entity.Video;
 import java.io.FileNotFoundException;
+import javax.ejb.EJB;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 
 /**
  *
  * @author Mokok
  */
+@Stateless
+@LocalBean
 public class ConcatTask extends CoreTask {
-
+	
+	@EJB
+	private ConfigDAO config;
+	
 	private static final String OPTIONS = " -f concat -c copy -map 0";
+
+	public ConcatTask() {
+	}
 
 	public ConcatTask(Video video) {
 		super(video);
@@ -24,17 +36,17 @@ public class ConcatTask extends CoreTask {
 	public String computeCmd() throws FileNotFoundException {
 		StringBuilder strBld = new StringBuilder();
 		//add ffmpeg exe path
-		strBld.append(getConfig().getFFMPEGPath());
+		strBld.append(config.getFFMPEGPath());
 		//add option for list-file read
 		strBld.append(" -i ");
 		{
 			StringBuilder listPath = new StringBuilder();
-			listPath.append(getConfig().getPathVideoSplittedInput());
+			listPath.append(config.getPathVideoSplittedInput());
 			listPath.append(getVideo().getUser().getId());
 			listPath.append("\\");
 			listPath.append(getVideo().getFullNameInput());
 			listPath.append("\\");
-			listPath.append(getConfig().getListFileName());
+			listPath.append(config.getListFileName());
 			strBld.append(listPath.toString());
 		}
 		//add split-specific options
@@ -43,7 +55,7 @@ public class ConcatTask extends CoreTask {
 		//add path to output
 		{
 			StringBuilder outPath = new StringBuilder();
-			outPath.append(getConfig().getPathVideoOutput());
+			outPath.append(config.getPathVideoOutput());
 			outPath.append(getVideo().getUser().getId());
 			outPath.append("\\");
 			outPath.append(getVideo().getNameOutput());

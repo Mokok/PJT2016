@@ -5,16 +5,28 @@
  */
 package core.worker;
 
+import dao.ConfigDAO;
 import entity.Video;
+import javax.ejb.EJB;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 
 /**
  *
  * @author Mokok
  */
+@Stateless
+@LocalBean
 public class TranscodeTask extends CoreTask {
+	
+	@EJB
+	private ConfigDAO config;
 
 	private static final String OPTIONS = "";
 
+	public TranscodeTask() {
+	}
+	
 	public TranscodeTask(Video video) {
 		super(video);
 	}

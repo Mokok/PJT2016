@@ -7,6 +7,7 @@ package core;
 
 import core.worker.CoreTask;
 import core.worker.SplitTask;
+import dao.ConfigDAO;
 import entity.Video;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executors;
@@ -57,15 +58,11 @@ public class ThreadManager implements Runnable {
 		for (int i = 0; i < 10; i++) {
 			//TODO: get elements from Glassfish Pool Queue
 			task = ThreadTask.createNewThreadTask(new CoreTask(video));
-			addSpecTask(task);
+			addTask(task);
 		}
 		//stop();
 	}
 
-	public void addSpecTask(ThreadTask task) {
-		executor.execute(task);
-	}
-	
 	public void addTask(ThreadTask task) {
 		executor.execute(task);
 		if(task.getTask() instanceof SplitTask){

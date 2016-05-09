@@ -89,7 +89,7 @@ public class CoreTest {
 		//add the video-to-split-test
 		CoreTask task = new SplitTask(video);
 		ThreadTask worker = ThreadTask.createNewThreadTask(task);
-		manager.addSpecTask(worker);
+		manager.addTask(worker);
 
 		Thread.sleep(3 * 1000);
 		manager.stop();

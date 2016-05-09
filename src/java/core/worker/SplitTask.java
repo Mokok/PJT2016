@@ -15,19 +15,26 @@ import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import stateless.FileOperationBean;
 
 /**
  *
  * @author Mokok
  */
+@Stateless
+@LocalBean
 public class SplitTask extends CoreTask {
 	
 	@EJB
-	public ConfigDAO config;
-
+	private ConfigDAO config;
+		
 	private static final String OPTIONS = "-f segment -segment_times ";
 	private static final String OPTIONS2 = " -c copy -map 0 -segment_list ";
+
+	public SplitTask() {
+	}
 	
 	public SplitTask(Video video) {
 		super(video);
