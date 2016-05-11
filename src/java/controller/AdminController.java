@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import stateless.FileOperationBean;
+import stateless.LocalConfig;
 
 /**
  *
@@ -50,6 +51,7 @@ public class AdminController {
 	public void simulateConfig() {
 		try {
 			configDAO.setDefaultConfig();
+			initConfig();
 		} catch (Exception ex) {
 			Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
 		}
@@ -82,7 +84,7 @@ public class AdminController {
 	}
 
 	public void testComputeCmd() throws IOException{
-		res = splitBean.test();
+		res = splitBean.testComputeCmd();
 	}
 	
 	public void testDuration(){
@@ -106,5 +108,21 @@ public class AdminController {
 	 */
 	public ConfigDAO getConfigDAO() {
 		return configDAO;
+	}
+
+	public void init(){
+		splitBean.init();
+	}
+	
+	private void initConfig() {
+		LocalConfig.setMaxSplitTime(configDAO.getMaxSplitTime());
+		LocalConfig.setMinSplitTimeDuration(configDAO.getMinSplitTimeDuration());
+		LocalConfig.setFFMPEGPath(configDAO.getFFMPEGPath());
+		LocalConfig.setFFProbePath(configDAO.getFFProbePath());
+		LocalConfig.setPathVideoInput(configDAO.getPathVideoInput());
+		LocalConfig.setPathVideoOutput(configDAO.getPathVideoOutput());
+		LocalConfig.setPathVideoSplittedInput(configDAO.getPathVideoSplittedInput());
+		LocalConfig.setPathVideoSplittedOutput(configDAO.getPathVideoSplittedOutput());
+		LocalConfig.setListFileName(configDAO.getListFileName());
 	}
 }

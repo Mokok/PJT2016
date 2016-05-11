@@ -38,9 +38,26 @@ public class FileOperationBean {
 	private String outputFile;
 	private String splittedFileInput;
 	private String splittedFileOutput;
+	
+	private Video video;
+	private User user;
 
 	@EJB
 	private ConfigDAO configDAO;
+	
+	public void init(){
+		video = new Video();
+		video.setExtInput("avi");
+		video.setNameInput("test4");
+		video.setExtOutput("mp4");
+		video.setNameOutput(video.getNameInput()+"_transcoded");
+
+		user = new User();
+		user.setId(1);
+		user.setFirstName("firstName");
+		user.setLastName("lastName");
+		video.setUser(user);
+	}
 
 	public void testFFmpeg(Video video) {
 		try {
@@ -157,20 +174,7 @@ public class FileOperationBean {
 		strBld = null;
 	}
 
-	public String test() throws IOException {
-		Video video = new Video();
-		video.setExtInput("mkv");
-		video.setNameInput("test2");
-		video.setExtOutput("mp4");
-		video.setNameOutput("test-transcoded");
-
-		User user = new User();
-		user.setId(1);
-		user.setFirstName("firstName");
-		user.setLastName("lastName");
-		video.setUser(user);
-		
-		
+	public String testComputeCmd() throws IOException {		
 		System.out.println("computeCmd");		
 		CoreTask task = new SplitTask(video);
 		ThreadTask worker = ThreadTask.createNewThreadTask(task);
@@ -178,19 +182,7 @@ public class FileOperationBean {
 		return task.computeCmd();
 	}
 
-	public String testDuration() {
-		Video video = new Video();
-		video.setExtInput("avi");
-		video.setNameInput("test");
-		video.setExtOutput("mp4");
-		video.setNameOutput("test-transcoded");
-
-		User user = new User();
-		user.setId(1);
-		user.setFirstName("firstName");
-		user.setLastName("lastName");
-		video.setUser(user);
-		
+	public String testDuration() {		
 		StringBuilder strCmd = new StringBuilder();
 		strCmd.append(configDAO.getFFProbePath());
 		strCmd.append(" -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 ");
@@ -233,18 +225,6 @@ public class FileOperationBean {
 	}
 
 	public void testSplit() throws InterruptedException {
-		Video video = new Video();
-		video.setExtInput("avi");
-		video.setNameInput("test2");
-		video.setExtOutput("mp4");
-		video.setNameOutput(video.getNameInput()+"_transcoded");
-
-		User user = new User();
-		user.setId(1);
-		user.setFirstName("firstName");
-		user.setLastName("lastName");
-		video.setUser(user);
-
 		ThreadManager manager = new ThreadManager(6);
 		//start the monitoring thread
 		ThreadMonitor monitor = new ThreadMonitor(manager.getExecutor(), 2);

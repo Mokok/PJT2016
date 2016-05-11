@@ -5,18 +5,17 @@
  */
 package core.worker;
 
-import dao.ConfigDAO;
 import entity.Video;
 import java.io.IOException;
+import java.util.concurrent.Callable;
 
 /**
  *
  * @author Mokok
  */
-public class CoreTask implements ITask {
+public class CoreTask implements ITask,Callable {
 		
 	private final Video video;
-	private String cmd;
 	private static final String OPTIONS = "";
 	
 	public CoreTask() {
@@ -29,10 +28,7 @@ public class CoreTask implements ITask {
 
 	@Override
 	public String computeCmd() throws IOException {
-		if (cmd == null || cmd.equals("")) {
-			cmd = "CoreTask default output";
-		}
-		return cmd;
+		return "echo CoreTask default output";
 	}
 
 	@Override
@@ -55,4 +51,8 @@ public class CoreTask implements ITask {
 		return res;
 	}*/
 
+	@Override
+	public String call() throws Exception {
+		return this.computeCmd();
+	}
 }

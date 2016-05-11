@@ -9,7 +9,7 @@
     <body>
 	Hello from Facelets
 	<h:form>
-	    
+	    #{adminController.init()}
 	    <h:commandButton action="#{adminController.testComputeCmd()}" value="testComuteCmd"/>
 	    <h:commandButton action="#{adminController.testDuration()}" value="testDuration"/>
 	    <h:commandButton action="#{adminController.testSplit()}" value="testSplit"/>

@@ -9,28 +9,31 @@ import core.worker.ConcatTask;
 import core.worker.CoreTask;
 import core.worker.SplitTask;
 import core.worker.TranscodeTask;
-import dao.ConfigDAO;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Random;
+import java.util.concurrent.FutureTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
 
 /**
  *
  * @author Mokok
  */
-@Stateless
-public class ThreadTask implements Runnable {
+public class ThreadTask extends FutureTask implements Runnable {
 
-	@EJB
-	public ConfigDAO config;
 	private CoreTask task;
-
-	protected ThreadTask() {
+	
+	/**
+	 * DO NOT USE THIS
+	 */
+	public ThreadTask(){
+		super(null);
+	}
+	
+	public ThreadTask(CoreTask task){
+		super(task);
 	}
 
 	public void insertTask(CoreTask task) {
@@ -39,7 +42,7 @@ public class ThreadTask implements Runnable {
 	}
 
 	public static ThreadTask createNewThreadTask(CoreTask task) {
-		ThreadTask result = new ThreadTask();
+		ThreadTask result = new ThreadTask(task);
 		result.insertTask(task);
 		return result;
 	}
@@ -85,6 +88,14 @@ public class ThreadTask implements Runnable {
 			}
 		} catch (IOException ex) {
 			Logger.getLogger(ThreadTask.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+	
+	@Override
+	protected void done(){
+		super.done();
+		if(getTask() instanceof SplitTask){
+			((SplitTask) getTask()).reformatList();
 		}
 	}
 }

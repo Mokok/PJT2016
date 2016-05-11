@@ -5,24 +5,19 @@
  */
 package core.worker;
 
-import dao.ConfigDAO;
 import entity.Video;
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import stateless.LocalConfig;
 
 /**
  *
  * @author Mokok
  */
-@Stateless
-@LocalBean
 public class TranscodeTask extends CoreTask {
 	
-	@EJB
-	private ConfigDAO config;
-
-	private static final String OPTIONS = "";
+	private static final String OPTIONS = " -c copy -map 0 ";
 
 	public TranscodeTask() {
 	}
@@ -32,8 +27,37 @@ public class TranscodeTask extends CoreTask {
 	}
 
 	@Override
-	public String computeCmd() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	public String computeCmd() throws IOException {
+		StringBuilder strBld = new StringBuilder();
+		//add ffmpeg exe path
+		strBld.append(LocalConfig.getFFMPEGPath());
+		//add path to source file
+		strBld.append(" ");
+		{
+			StringBuilder inPath = new StringBuilder();
+			inPath.append(LocalConfig.getPathVideoSplittedInput());
+			inPath.append(this.getVideo().getUser().getId());
+			inPath.append("\\");
+			inPath.append(getVideo().getFullNameInput());
+			if (!new File(inPath.toString()).isFile()) {
+				throw new FileNotFoundException(inPath.toString());
+			}
+			strBld.append(inPath.toString());
+		}
+		strBld.append(OPTIONS);
+		//add path to source file
+		{
+			StringBuilder outPath = new StringBuilder();
+			outPath.append(LocalConfig.getPathVideoSplittedOutput());
+			outPath.append(getVideo().getUser().getId());
+			new File(outPath.toString()).mkdirs();
+			outPath.append("\\");
+			outPath.append(getVideo().getNameInput());
+			outPath.append("\\");
+			outPath.append(getVideo().getExtOutput());
+			strBld.append(outPath.toString());
+		}		
+		return strBld.toString();
 	}
 }
 /*
@@ -42,7 +66,7 @@ public class TranscodeTask extends CoreTask {
 		//add path to source file
 		strBld.append("-i ");
 		StringBuilder path = new StringBuilder();
-		path.append(configDAO.getPathVideoSplittedInput());
+		path.append(LocalConfig.getPathVideoSplittedInput());
 		path.append(getVideoTask().getUser().getId());
 		path.append("\\");
 		path.append(getVideoTask().getFullNameInput());
@@ -57,7 +81,7 @@ public class TranscodeTask extends CoreTask {
 		strBld.append(" ");
 		//add path to output
 		path.setLength(0);
-		path.append(configDAO.getPathVideoSplittedOutput());
+		path.append(LocalConfig.getPathVideoSplittedOutput());
 		path.append(getVideoTask().getUser().getId());
 		path.append("\\");
 		path.append(getVideoTask().getFullNameInput());

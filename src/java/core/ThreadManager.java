@@ -16,21 +16,30 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.EJB;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 
 /**
  *
  * @author Mokok
  */
+@Stateless
+@LocalBean
 public class ThreadManager implements Runnable {
 
+	
+	@EJB
+	private ConfigDAO configDAO;
+	
 	private final int poolSize;
 	private final ThreadPoolExecutor executor;
 
-	protected ThreadManager() {
+	public ThreadManager() {
 		this(10);
 	}
 
-	public ThreadManager(int maxNumberOfWorker) {
+	public ThreadManager(int maxNumberOfWorker) {				
 		poolSize = maxNumberOfWorker;
 		//RejectedExecutionHandler implementation
 		RejectedExecutionHandlerImpl rejectionHandler = new RejectedExecutionHandlerImpl();
@@ -39,7 +48,7 @@ public class ThreadManager implements Runnable {
 		//creating the ThreadPoolExecutor
 		executor = new ThreadPoolExecutor(poolSize, poolSize, 60 * 2, TimeUnit.SECONDS, new ArrayBlockingQueue<>(50, true), threadFactory, rejectionHandler);
 	}
-
+	
 	public int getPoolSize() {
 		return poolSize;
 	}

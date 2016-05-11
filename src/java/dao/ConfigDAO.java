@@ -25,7 +25,7 @@ public class ConfigDAO {
 
 	@PersistenceContext(unitName = "CorePU")
 	private EntityManager em;
-
+	
 	public int getMaxSplitTime() {
 		Config config = (Config) em.createNamedQuery("maxSplitTime", Config.class).getSingleResult();
 		return Integer.parseInt(config.getVal());
@@ -202,7 +202,7 @@ public class ConfigDAO {
 	
 	public void setDefaultConfig() throws Exception {
 			this.setMaxSplitTime(15);
-			this.setMinSplitTimeDuration(120);
+			this.setMinSplitTimeDuration(600);
 			this.setFFMPEGPath("E:\\ffmpeg\\bin\\ffmpeg");
 			this.setFFProbePath("E:\\ffmpeg\\bin\\ffprobe");
 			this.setPathVideoInput("E:\\FILES\\VideoInput\\");
