@@ -10,6 +10,7 @@ import core.worker.CoreTask;
 import core.worker.SplitTask;
 import core.worker.TranscodeTask;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Random;
@@ -89,13 +90,18 @@ public class ThreadTask extends FutureTask implements Runnable {
 		} catch (IOException ex) {
 			Logger.getLogger(ThreadTask.class.getName()).log(Level.SEVERE, null, ex);
 		}
+		done();
 	}
 	
 	@Override
 	protected void done(){
 		super.done();
 		if(getTask() instanceof SplitTask){
-			((SplitTask) getTask()).reformatList();
+			try {
+				((SplitTask) getTask()).reformatList();
+			} catch (FileNotFoundException ex) {
+				Logger.getLogger(ThreadTask.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		}
 	}
 }

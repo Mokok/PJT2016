@@ -48,7 +48,7 @@ public class FileOperationBean {
 	public void init(){
 		video = new Video();
 		video.setExtInput("avi");
-		video.setNameInput("test4");
+		video.setNameInput("test3");
 		video.setExtOutput("mp4");
 		video.setNameOutput(video.getNameInput()+"_transcoded");
 

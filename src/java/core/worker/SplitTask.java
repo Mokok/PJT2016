@@ -8,12 +8,15 @@ package core.worker;
 import entity.Video;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import stateless.FileOperationBean;
 import stateless.LocalConfig;
 
@@ -179,9 +182,10 @@ public class SplitTask extends CoreTask {
 	}
 	
 	public void reformatList() throws FileNotFoundException {
+		StringBuilder strBld = new StringBuilder();
+		//get the list file
 		File file;
 		{
-			StringBuilder strBld = new StringBuilder();
 			strBld.append(LocalConfig.getPathVideoSplittedInput());
 			strBld.append(getVideo().getUser().getId());
 			strBld.append("\\");
@@ -189,11 +193,55 @@ public class SplitTask extends CoreTask {
 			strBld.append("\\");
 			strBld.append(LocalConfig.getListFileName());
 			file = new File(strBld.toString());
-			if (!file.isFile()) {
+			if (!file.exists()) {
 				throw new FileNotFoundException(strBld.toString());
 			}
 		}
-		FileInputStream in = new FileInputStream(file);
-		
+		//empty the StringBuilder
+		strBld.setLength(0);
+		//Reading the file
+		{
+			FileReader fr = new FileReader(file);
+			BufferedReader br = new BufferedReader(fr);
+			try {
+				String line = br.readLine();
+				while(line != null){
+					strBld.append(line);
+					strBld.append("\n");
+					line = br.readLine();
+				}
+				fr.close();
+			} catch (FileNotFoundException e){
+				System.out.println("File was not found!");
+			} catch (IOException ex) {
+				Logger.getLogger(SplitTask.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+		//Modifying the file
+		StringBuffer result = new StringBuffer();
+		{
+			String fileStr = strBld.toString();
+			strBld.setLength(0);
+			//reconstruct file path
+			strBld.append(LocalConfig.getPathVideoSplittedInput());
+			strBld.append(getVideo().getUser().getId());
+			strBld.append("\\");
+			strBld.append(getVideo().getNameInput());
+			strBld.append("\\");
+			//replace
+			Pattern pattern = Pattern.compile("(file )([a-zA-Z0-9_.-]+\\.\\w{3,5})[\\s\n]+");
+			Matcher matcher = pattern.matcher(fileStr);
+			String temp = strBld.toString().replaceAll("\\\\", "\\\\\\\\");
+			while(matcher.find()){
+				matcher.appendReplacement(result, matcher.group(1)+temp+matcher.group(2)+"\n");
+			}
+		}
+		//Writting the file
+		{
+			PrintWriter pr = new PrintWriter(file);
+			pr.print("");
+			pr.append(result.toString());
+			pr.flush();
+		}
 	}
 }
