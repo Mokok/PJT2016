@@ -7,16 +7,16 @@ package core.worker;
 
 import entity.Video;
 import java.io.IOException;
-import java.util.concurrent.Callable;
 
 /**
  *
  * @author Mokok
  */
-public class CoreTask implements ITask,Callable {
+public class CoreTask implements ITask {
 		
 	private final Video video;
 	private static final String OPTIONS = "";
+	private TaskStatus status = TaskStatus.NOT_STARTED;
 	
 	public CoreTask() {
 		video = null;
@@ -36,6 +36,14 @@ public class CoreTask implements ITask,Callable {
 		return video;
 	}
 	
+	public void setStatus(TaskStatus newStatus){
+		status = newStatus;
+	}
+	
+	public TaskStatus getStatus(){
+		return status;
+	}
+	
 	/*public void setConfig(ConfigDAO configDAO){
 		config = configDAO;
 	}*/
@@ -50,9 +58,4 @@ public class CoreTask implements ITask,Callable {
 		}
 		return res;
 	}*/
-
-	@Override
-	public String call() throws Exception {
-		return this.computeCmd();
-	}
 }

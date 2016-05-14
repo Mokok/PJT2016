@@ -5,9 +5,11 @@
  */
 package stateless;
 
+import core.ThreadCoordinator;
 import core.ThreadManager;
 import core.ThreadMonitor;
 import core.ThreadTask;
+import core.worker.ConcatTask;
 import core.worker.CoreTask;
 import core.worker.SplitTask;
 import java.io.IOException;
@@ -20,10 +22,8 @@ import dao.ConfigDAO;
 import entity.User;
 import entity.Video;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStreamReader;
 import javax.ejb.LocalBean;
-import utils.FileUtils;
 
 /**
  *
@@ -32,12 +32,6 @@ import utils.FileUtils;
 @Stateless
 @LocalBean
 public class FileOperationBean {
-
-	private String ffmpegPath;
-	private String inputFile;
-	private String outputFile;
-	private String splittedFileInput;
-	private String splittedFileOutput;
 	
 	private Video video;
 	private User user;
@@ -59,124 +53,9 @@ public class FileOperationBean {
 		video.setUser(user);
 	}
 
-	public void testFFmpeg(Video video) {
-		try {
-			this.prepareSplit(video);
-		} catch (IOException e) {
-			System.err.println(e.getMessage());
-		}
-
-		final String[] cmd = new String[]{ffmpegPath,
-			"-i",
-			inputFile,
-			"-f",
-			"segment",
-			"-segment_time",
-			String.valueOf(configDAO.getMaxSplitTime()),
-			"-codec",
-			"copy",
-			"-map",
-			"0",
-			splittedFileInput};
-
-		Runtime runtime = Runtime.getRuntime();
-		try {
-			Process proc = runtime.exec(cmd);
-
-			BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-			BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-
-			String s;
-
-			// read the output from the command
-			System.out.println("Here is the standard output of the command:\n");
-			while ((s = stdInput.readLine()) != null) {
-				System.out.println(s);
-			}
-
-			// read any errors from the attempted command
-			System.err.println("Here is the standard error of the command (if any):\n");
-			while ((s = stdError.readLine()) != null) {
-				System.out.println(s);
-			}
-		} catch (IOException ex) {
-			Logger.getLogger(FileOperationBean.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
-
-	/**
-	 * Prepares strings such as
-	 * inputFile,outputFile,splittedFileInput,splittedFileOutput
-	 *
-	 * @param video
-	 */
-	private void prepareSplit(Video video) throws IOException {
-		StringBuilder strBld = new StringBuilder();
-		File tempFile;
-
-		ffmpegPath = configDAO.getFFMPEGPath();
-
-		//path : VideoInput innitiatl source, waitting for split
-		strBld.append(configDAO.getPathVideoInput());
-		strBld.append(video.getUser().getId());
-		strBld.append("\\");
-		strBld.append(video.getFullNameInput());
-		inputFile = configDAO.getPathVideoInput() + video.getUser().getId() + "\\" + video.getFullNameInput();
-		tempFile = new File(inputFile);
-		if (!tempFile.isFile()) {
-			throw new IOException("Unreachable source file (" + inputFile + ")");
-		}
-
-		//path VideoOutput (concated and transcoded)
-		strBld.setLength(0);
-		strBld.append(configDAO.getPathVideoOutput());
-		strBld.append(video.getUser().getId());
-		//remove if exists
-		tempFile = new File(strBld.toString());
-		FileUtils.delete(tempFile);
-		//created folder path
-		tempFile.mkdirs();
-		strBld.append("\\");
-		strBld.append(video.getFullNameInput());
-		outputFile = configDAO.getPathVideoOutput() + video.getUser().getId() + "\\" + video.getFullNameInput();
-
-		//path : VideoSplitted\input (cut, but waitting for transcode
-		strBld.setLength(0);
-		strBld.append(configDAO.getPathVideoSplittedInput());
-		strBld.append(video.getUser().getId());
-		//remove if exists
-		tempFile = new File(strBld.toString());
-		FileUtils.delete(tempFile);
-		//created folder path
-		tempFile.mkdirs();
-		strBld.append("\\");
-		strBld.append(video.getNameInput());
-		strBld.append("%4d.");
-		strBld.append(video.getExtInput());
-		splittedFileInput = strBld.toString();
-
-		//path : VideoSplited\Output cut and transcoded, waitting for concat
-		strBld.setLength(0);
-		strBld.append(configDAO.getPathVideoSplittedOutput());
-		strBld.append(video.getUser().getId());
-		//remove if exists
-		tempFile = new File(strBld.toString());
-		FileUtils.delete(tempFile);
-		//created folder path
-		tempFile.mkdirs();
-		strBld.append("\\");
-		strBld.append(video.getNameOutput());
-		strBld.append("%4d.");
-		strBld.append(video.getExtOutput());
-		splittedFileOutput = strBld.toString();
-
-		strBld.setLength(0);
-		strBld = null;
-	}
-
 	public String testComputeCmd() throws IOException {		
 		System.out.println("computeCmd");		
-		CoreTask task = new SplitTask(video);
+		CoreTask task = new ConcatTask(video);
 		ThreadTask worker = ThreadTask.createNewThreadTask(task);
 		//task.setConfig(configDAO);
 		return task.computeCmd();
@@ -237,13 +116,12 @@ public class FileOperationBean {
 
 		//add the video-to-split-test
 		CoreTask task = new SplitTask(video);
-		ThreadTask worker = ThreadTask.createNewThreadTask(task);
-		manager.addTask(worker);
+		ThreadTask thread = ThreadTask.createNewThreadTask(task);
+		ThreadCoordinator coord = new ThreadCoordinator();
+		coord.videoSubmitProcessStep1(thread, manager);
 
-		Thread.sleep(3 * 1000);
+		Thread.sleep(120 * 1000);
 		manager.stop();
 		monitor.stop();
 	}
-
-	
 }

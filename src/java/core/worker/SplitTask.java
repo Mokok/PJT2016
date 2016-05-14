@@ -5,19 +5,11 @@
  */
 package core.worker;
 
+import core.WorkerUtils;
 import entity.Video;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import stateless.FileOperationBean;
 import stateless.LocalConfig;
 
 /**
@@ -120,7 +112,7 @@ public class SplitTask extends CoreTask {
 		StringBuilder timers = new StringBuilder();
 		int maxSplitTime = LocalConfig.getMaxSplitTime();
 		int minSplitTimeDuration = LocalConfig.getMinSplitTimeDuration();
-		int videoDuration = getVideoDuration();
+		int videoDuration = WorkerUtils.getVideoDuration(getVideo());
 		int numberOfSlice = Integer.min(maxSplitTime, videoDuration/minSplitTimeDuration);
 		
 		if(numberOfSlice != 0){
@@ -136,112 +128,6 @@ public class SplitTask extends CoreTask {
 	}
 	
 	private String computeSplitTimer(){
-		return String.valueOf(Integer.max(getVideoDuration()/LocalConfig.getMaxSplitTime(), LocalConfig.getMinSplitTimeDuration()));
-	}
-	
-	private int getVideoDuration() {
-		StringBuilder strCmd = new StringBuilder();
-		strCmd.append(LocalConfig.getFFProbePath());
-		strCmd.append(" -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 ");
-		strCmd.append(LocalConfig.getPathVideoInput());
-		strCmd.append("\\");
-		strCmd.append(getVideo().getUser().getId());
-		strCmd.append("\\");
-		strCmd.append(getVideo().getFullNameInput());
-		
-		
-		Runtime runtime = Runtime.getRuntime();
-		StringBuilder strBld = new StringBuilder();
-		try {
-			Process proc = runtime.exec(strCmd.toString());
-			
-			BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-			BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-
-			String s;
-
-			// read the output from the command
-			System.out.println("Here is the standard output of the command:\n");
-			while ((s = stdInput.readLine()) != null) {
-				System.out.println(s);
-				strBld.append(s);
-				strBld.append("\n");
-			}
-
-			// read any errors from the attempted command
-			System.err.println("Here is the standard error of the command (if any):\n");
-			while ((s = stdError.readLine()) != null) {
-				System.out.println(s);
-				strBld.append(s);
-				strBld.append("\n");
-			}
-		} catch (IOException ex) {
-			Logger.getLogger(FileOperationBean.class.getName()).log(Level.SEVERE, null, ex);
-		}
-		return (int) Math.floor(Float.valueOf(strBld.toString().trim()));
-	}
-	
-	public void reformatList() throws FileNotFoundException {
-		StringBuilder strBld = new StringBuilder();
-		//get the list file
-		File file;
-		{
-			strBld.append(LocalConfig.getPathVideoSplittedInput());
-			strBld.append(getVideo().getUser().getId());
-			strBld.append("\\");
-			strBld.append(getVideo().getNameInput());
-			strBld.append("\\");
-			strBld.append(LocalConfig.getListFileName());
-			file = new File(strBld.toString());
-			if (!file.exists()) {
-				throw new FileNotFoundException(strBld.toString());
-			}
-		}
-		//empty the StringBuilder
-		strBld.setLength(0);
-		//Reading the file
-		{
-			FileReader fr = new FileReader(file);
-			BufferedReader br = new BufferedReader(fr);
-			try {
-				String line = br.readLine();
-				while(line != null){
-					strBld.append(line);
-					strBld.append("\n");
-					line = br.readLine();
-				}
-				fr.close();
-			} catch (FileNotFoundException e){
-				System.out.println("File was not found!");
-			} catch (IOException ex) {
-				Logger.getLogger(SplitTask.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
-		//Modifying the file
-		StringBuffer result = new StringBuffer();
-		{
-			String fileStr = strBld.toString();
-			strBld.setLength(0);
-			//reconstruct file path
-			strBld.append(LocalConfig.getPathVideoSplittedInput());
-			strBld.append(getVideo().getUser().getId());
-			strBld.append("\\");
-			strBld.append(getVideo().getNameInput());
-			strBld.append("\\");
-			//replace
-			Pattern pattern = Pattern.compile("(file )([a-zA-Z0-9_.-]+\\.\\w{3,5})[\\s\n]+");
-			Matcher matcher = pattern.matcher(fileStr);
-			String temp = strBld.toString().replaceAll("\\\\", "\\\\\\\\");
-			while(matcher.find()){
-				matcher.appendReplacement(result, matcher.group(1)+temp+matcher.group(2)+"\n");
-			}
-		}
-		//Writting the file
-		{
-			PrintWriter pr = new PrintWriter(file);
-			pr.print("");
-			pr.append(result.toString());
-			pr.flush();
-		}
+		return String.valueOf(Integer.max(WorkerUtils.getVideoDuration(getVideo())/LocalConfig.getMaxSplitTime(), LocalConfig.getMinSplitTimeDuration()));
 	}
 }

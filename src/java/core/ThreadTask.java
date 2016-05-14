@@ -5,16 +5,17 @@
  */
 package core;
 
+import core.exception.InvalidPreviousThreadTaskException;
 import core.worker.ConcatTask;
 import core.worker.CoreTask;
 import core.worker.SplitTask;
 import core.worker.TranscodeTask;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
-import java.util.concurrent.FutureTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,19 +23,21 @@ import java.util.logging.Logger;
  *
  * @author Mokok
  */
-public class ThreadTask extends FutureTask implements Runnable {
-
-	private CoreTask task;
+public final class ThreadTask extends Thread {
 	
-	/**
-	 * DO NOT USE THIS
-	 */
+	
+	private Process proc;
+	private CoreTask task;
+	private List<ThreadTaskEndListener> listeners;
+	
 	public ThreadTask(){
-		super(null);
+		super();
+		listeners = new ArrayList<>();
 	}
 	
 	public ThreadTask(CoreTask task){
-		super(task);
+		this();
+		insertTask(task);
 	}
 
 	public void insertTask(CoreTask task) {
@@ -44,7 +47,6 @@ public class ThreadTask extends FutureTask implements Runnable {
 
 	public static ThreadTask createNewThreadTask(CoreTask task) {
 		ThreadTask result = new ThreadTask(task);
-		result.insertTask(task);
 		return result;
 	}
 
@@ -60,20 +62,34 @@ public class ThreadTask extends FutureTask implements Runnable {
 		} else {
 			System.out.println("Info  : running");
 			try {
-			Thread.sleep((new Random().nextInt(5) + 3) * 1000L);
+				Thread.sleep((new Random().nextInt(5) + 3) * 1000L);
 			} catch (InterruptedException ex) {
 				Logger.getLogger(ThreadTask.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
-		
 		System.out.println("Stop  : " + Thread.currentThread().getName() + " Type : " + task.getClass().getName());
 	}
 
 	private void processTask() {
-		Runtime runtime = Runtime.getRuntime();
 		try {
-			Process proc = runtime.exec(this.getTask().computeCmd());
+			Runtime runtime = Runtime.getRuntime();
+			
+			proc = runtime.exec(this.getTask().computeCmd());
+			
+			//monitor(proc);
+			
+			proc.waitFor();
+			for (ThreadTaskEndListener listener : listeners) {
+				listener.processFinished(this);
+			}
+		} catch (IOException | InterruptedException | InvalidPreviousThreadTaskException ex) {
+			Logger.getLogger(ThreadTask.class.getName()).log(Level.SEVERE, null, ex);
+		}
 
+	}
+	
+	private void monitor(Process proc){
+		try {
 			BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 			BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
 
@@ -90,18 +106,17 @@ public class ThreadTask extends FutureTask implements Runnable {
 		} catch (IOException ex) {
 			Logger.getLogger(ThreadTask.class.getName()).log(Level.SEVERE, null, ex);
 		}
-		done();
 	}
 	
-	@Override
-	protected void done(){
-		super.done();
-		if(getTask() instanceof SplitTask){
-			try {
-				((SplitTask) getTask()).reformatList();
-			} catch (FileNotFoundException ex) {
-				Logger.getLogger(ThreadTask.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
+	Process getProc(){
+		return proc;
+	}
+	
+	public void addListener(ThreadTaskEndListener listener){
+		 listeners.add(listener);
+	}
+	
+	public void removeListener(ThreadTaskEndListener listener){
+		 listeners.remove(listener);
 	}
 }

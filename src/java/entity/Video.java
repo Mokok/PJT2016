@@ -6,6 +6,8 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -101,6 +103,25 @@ public class Video implements Serializable {
 		return result;
 	}
 
+	@Override
+	public Video clone() {
+		Video clone = null;
+		try {
+			clone = (Video) super.clone();
+			clone.setExtInput(extInput);
+			clone.setExtOutput(extOutput);
+			clone.setId(id);
+			clone.setNameInput(nameInput);
+			clone.setNameOutput(nameOutput);
+			clone.setUser(user);
+		} catch (CloneNotSupportedException ex) {
+			Logger.getLogger(Video.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		return clone;
+	}
+
+	
+	
 	/* (non-Javadoc)
      * @see java.lang.Object#equals(java.lang.Object)
 	 */

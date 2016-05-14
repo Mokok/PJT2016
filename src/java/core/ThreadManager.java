@@ -5,10 +5,7 @@
  */
 package core;
 
-import core.worker.CoreTask;
-import core.worker.SplitTask;
-import dao.ConfigDAO;
-import entity.Video;
+import core.exception.RejectedExecutionHandlerImpl;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -16,21 +13,12 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
 
 /**
  *
  * @author Mokok
  */
-@Stateless
-@LocalBean
 public class ThreadManager implements Runnable {
-
-	
-	@EJB
-	private ConfigDAO configDAO;
 	
 	private final int poolSize;
 	private final ThreadPoolExecutor executor;
@@ -62,23 +50,20 @@ public class ThreadManager implements Runnable {
 	 */
 	@Override
 	public void run() {
-		ThreadTask task;
+		/*ThreadTask task;
 		Video video = new Video();
 		for (int i = 0; i < 10; i++) {
 			//TODO: get elements from Glassfish Pool Queue
 			task = ThreadTask.createNewThreadTask(new CoreTask(video));
-			addTask(task);
-		}
+			videoSubmitProcessStep1(task);
+		}*/
 		//stop();
 	}
 
-	public void addTask(ThreadTask task) {
-		executor.execute(task);
-		if(task.getTask() instanceof SplitTask){
-			//if()
-		}
+	void execute(ThreadTask thread) {
+		executor.execute(thread);
 	}
-
+	
 	public void stop() {
 		executor.shutdown();
 		while (!executor.isTerminated()) {

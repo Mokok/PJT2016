@@ -13,7 +13,7 @@ import java.nio.file.NotDirectoryException;
  *
  * @author Mokok
  */
-public class FileUtils {
+public abstract class FileUtils {
 
 	public static void delete(File f) throws IOException {
 		if (f.isDirectory()) {

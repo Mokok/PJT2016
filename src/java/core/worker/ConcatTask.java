@@ -15,7 +15,7 @@ import stateless.LocalConfig;
  */
 public class ConcatTask extends CoreTask {
 			
-	private static final String OPTIONS = " -f concat -c copy -map 0 ";
+	private static final String OPTIONS = "  -c copy -map 0 -y ";
 
 	public ConcatTask() {
 	}
@@ -30,13 +30,13 @@ public class ConcatTask extends CoreTask {
 		//add ffmpeg exe path
 		strBld.append(LocalConfig.getFFMPEGPath());
 		//add option for list-file read
-		strBld.append(" -i ");
+		strBld.append(" -f concat -safe 0 -i ");
 		{
 			StringBuilder listPath = new StringBuilder();
 			listPath.append(LocalConfig.getPathVideoSplittedInput());
 			listPath.append(getVideo().getUser().getId());
 			listPath.append("\\");
-			listPath.append(getVideo().getFullNameInput());
+			listPath.append(getVideo().getNameInput());
 			listPath.append("\\");
 			listPath.append(LocalConfig.getListFileName());
 			strBld.append(listPath.toString());
@@ -49,10 +49,7 @@ public class ConcatTask extends CoreTask {
 			outPath.append(LocalConfig.getPathVideoOutput());
 			outPath.append(getVideo().getUser().getId());
 			outPath.append("\\");
-			outPath.append(getVideo().getNameOutput());
-			outPath.append(".");
-			outPath.append(getVideo().getExtOutput());
-
+			outPath.append(getVideo().getFullNameOutput());
 			strBld.append(outPath.toString());
 		}
 		return strBld.toString();

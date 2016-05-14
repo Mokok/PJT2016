@@ -18,7 +18,7 @@ import stateless.LocalConfig;
 public class TranscodeTask extends CoreTask {
 	
 	private static final String OPTIONS = " -c copy -map 0 ";
-
+	
 	public TranscodeTask() {
 	}
 	
@@ -32,11 +32,13 @@ public class TranscodeTask extends CoreTask {
 		//add ffmpeg exe path
 		strBld.append(LocalConfig.getFFMPEGPath());
 		//add path to source file
-		strBld.append(" ");
+		strBld.append(" -y -i ");
 		{
 			StringBuilder inPath = new StringBuilder();
 			inPath.append(LocalConfig.getPathVideoSplittedInput());
 			inPath.append(this.getVideo().getUser().getId());
+			inPath.append("\\");
+			inPath.append(getVideo().getNameOutput());
 			inPath.append("\\");
 			inPath.append(getVideo().getFullNameInput());
 			if (!new File(inPath.toString()).isFile()) {
@@ -50,45 +52,15 @@ public class TranscodeTask extends CoreTask {
 			StringBuilder outPath = new StringBuilder();
 			outPath.append(LocalConfig.getPathVideoSplittedOutput());
 			outPath.append(getVideo().getUser().getId());
+			outPath.append("\\");
+			outPath.append(getVideo().getNameOutput());
 			new File(outPath.toString()).mkdirs();
 			outPath.append("\\");
 			outPath.append(getVideo().getNameInput());
-			outPath.append("\\");
+			outPath.append(".");
 			outPath.append(getVideo().getExtOutput());
 			strBld.append(outPath.toString());
 		}		
 		return strBld.toString();
 	}
 }
-/*
-	private String computeTranscodeCmd() throws FileNotFoundException, IOException {
-		StringBuilder strBld = new StringBuilder();
-		//add path to source file
-		strBld.append("-i ");
-		StringBuilder path = new StringBuilder();
-		path.append(LocalConfig.getPathVideoSplittedInput());
-		path.append(getVideoTask().getUser().getId());
-		path.append("\\");
-		path.append(getVideoTask().getFullNameInput());
-		if (!new File(path.toString()).isFile()) {
-			throw new FileNotFoundException(path.toString());
-		}
-		strBld.append(path);
-		path.setLength(0);
-		strBld.append(" ");
-		//add split-specific options
-		strBld.append(TRANSCODE_OPT);
-		strBld.append(" ");
-		//add path to output
-		path.setLength(0);
-		path.append(LocalConfig.getPathVideoSplittedOutput());
-		path.append(getVideoTask().getUser().getId());
-		path.append("\\");
-		path.append(getVideoTask().getFullNameInput());
-		//create directories if not exist
-		FileUtils.resetFolder(new File(path.toString()));
-		strBld.append(path);
-		path.setLength(0);
-		return strBld.toString();
-	}
- */

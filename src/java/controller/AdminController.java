@@ -10,11 +10,9 @@ import javax.ejb.EJB;
 import javax.inject.Named;
 
 import dao.ConfigDAO;
-import entity.User;
 
 import javax.enterprise.context.RequestScoped;
 
-import entity.Video;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -55,32 +53,6 @@ public class AdminController {
 		} catch (Exception ex) {
 			Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
 		}
-	}
-
-	/**
-	 * Simulation à supprimer
-	 *
-	 * @return
-	 */
-	public Video simulationVideoAndUser() {
-		Video video = new Video();
-		video.setExtInput("avi");
-		video.setNameInput("test");
-		video.setExtOutput("mp4");
-		video.setNameOutput("test-transcoded");
-
-		User user = new User();
-		user.setId(1);
-		user.setFirstName("firstName");
-		user.setLastName("lastName");
-		video.setUser(user);
-
-		return video;
-	}
-
-	public void splitFile() {
-		Video video = simulationVideoAndUser();
-		splitBean.testFFmpeg(video);
 	}
 
 	public void testComputeCmd() throws IOException{
