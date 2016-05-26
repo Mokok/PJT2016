@@ -23,6 +23,7 @@ import entity.User;
 import entity.Video;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import javax.annotation.PostConstruct;
 import javax.ejb.LocalBean;
 
 /**
@@ -39,6 +40,7 @@ public class FileOperationBean {
 	@EJB
 	private ConfigDAO configDAO;
 	
+	@PostConstruct
 	public void init(){
 		video = new Video();
 		video.setExtInput("avi");
@@ -109,16 +111,13 @@ public class FileOperationBean {
 		ThreadMonitor monitor = new ThreadMonitor(manager.getExecutor(), 2);
 		Thread monitorThread = new Thread(monitor);
 		monitorThread.start();
-		//submit work to the thread pool
 		manager.run();
 
 		Thread.sleep(3 * 1000);
 
 		//add the video-to-split-test
-		CoreTask task = new SplitTask(video);
-		ThreadTask thread = ThreadTask.createNewThreadTask(task);
 		ThreadCoordinator coord = new ThreadCoordinator();
-		coord.videoSubmitProcessStep1(thread, manager);
+		coord.videoSubmitProcessStep1(video, manager);
 
 		Thread.sleep(120 * 1000);
 		manager.stop();

@@ -32,7 +32,7 @@ public class ThreadTaskEndListener implements EventListener {
 		}else if(thread.getTask() instanceof TranscodeTask){
 			coordinator.videoSubmitProcessStep3(thread);
 		}else if(thread.getTask() instanceof ConcatTask){
-			//mark the submited video task to "done"
+			coordinator.videoSubmitProcessStep4(thread);
 		}
 	}
 }

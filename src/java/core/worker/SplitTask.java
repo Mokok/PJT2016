@@ -128,6 +128,8 @@ public class SplitTask extends CoreTask {
 	}
 	
 	private String computeSplitTimer(){
-		return String.valueOf(Integer.max(WorkerUtils.getVideoDuration(getVideo())/LocalConfig.getMaxSplitTime(), LocalConfig.getMinSplitTimeDuration()));
+		float duration = WorkerUtils.getVideoDuration(getVideo());
+		video.setDuration(duration);
+		return String.valueOf(Integer.max(duration)/LocalConfig.getMaxSplitTime(), LocalConfig.getMinSplitTimeDuration()));
 	}
 }

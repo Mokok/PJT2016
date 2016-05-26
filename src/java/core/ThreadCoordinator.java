@@ -8,6 +8,7 @@ package core;
 import static core.WorkerUtils.generateListOfTranscodeTasks;
 import core.exception.InvalidPreviousThreadTaskException;
 import core.worker.ConcatTask;
+import core.worker.CoreTask;
 import core.worker.SplitTask;
 import core.worker.TaskStatus;
 import core.worker.TranscodeTask;
@@ -27,12 +28,14 @@ public class ThreadCoordinator {
 	
 	/**
 	 * THIS IS THE WAY TO ADD A VIDEO TO THE GLOBAL PROCESS OF TRANSCODING
-	 * @param thread
+	 * @param video
 	 * @param tm 
 	 */
-	public void videoSubmitProcessStep1(ThreadTask thread, ThreadManager tm) {
+	public void videoSubmitProcessStep1(Video video, ThreadManager tm) {
 		manager = tm;
-		originalVideo = thread.getTask().getVideo();
+		originalVideo = video;
+		CoreTask task = new SplitTask(video);
+		ThreadTask thread = ThreadTask.createNewThreadTask(task);
 		thread.addListener(new ThreadTaskEndListener(this));
 		manager.execute(thread);
 	}
@@ -82,5 +85,14 @@ public class ThreadCoordinator {
 			return false;
 		}
 		return true;
+	}
+
+	void videoSubmitProcessStep4(ThreadTask previousThreadTask) throws InvalidPreviousThreadTaskException {
+		if(! (previousThreadTask.getTask() instanceof ConcatTask)){
+			throw new InvalidPreviousThreadTaskException("Previous task of videoSubmitProcessStep4 must be a ConcatTask");
+		}
+		///////////////////////////////////////////
+		//Send back the video into the Glassfish's queue
+		//////////////////////////////////////////
 	}
 }

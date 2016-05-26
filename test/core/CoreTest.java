@@ -5,8 +5,6 @@
  */
 package core;
 
-import core.worker.CoreTask;
-import core.worker.SplitTask;
 import entity.User;
 import entity.Video;
 import org.junit.After;
@@ -87,10 +85,8 @@ public class CoreTest {
 		Thread.sleep(3 * 1000);
 
 		//add the video-to-split-test
-		CoreTask task = new SplitTask(video);
-		ThreadTask thread = ThreadTask.createNewThreadTask(task);
 		ThreadCoordinator coord = new ThreadCoordinator();
-		coord.videoSubmitProcessStep1(thread, manager);
+		coord.videoSubmitProcessStep1(video, manager);
 
 		Thread.sleep(3 * 1000);
 		manager.stop();
