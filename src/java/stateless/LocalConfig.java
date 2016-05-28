@@ -11,14 +11,14 @@ import java.util.HashMap;
  *
  * @author Mokok
  */
-public abstract class LocalConfig{
-	
-	private static HashMap<String,Object> config;
-		
+public abstract class LocalConfig {
+
+	private static HashMap<String, Object> config;
+
 	public static int getMaxSplitTime() {
 		return (int) config.get("maxSplitTime");
 	}
-	
+
 	public static int getMinSplitTimeDuration() {
 		return (int) config.get("minSplitTimeDuration");
 	}
@@ -26,7 +26,7 @@ public abstract class LocalConfig{
 	public static String getFFMPEGPath() {
 		return (String) config.get("pathFFMPEG");
 	}
-	
+
 	public static String getFFProbePath() {
 		return (String) config.get("pathFFProbe");
 	}
@@ -50,65 +50,65 @@ public abstract class LocalConfig{
 	public static String getListFileName() {
 		return (String) config.get("listFileName");
 	}
-	
+
 	public static void setMaxSplitTime(int maxSplitTime) {
-		if(config == null){
+		if (config == null) {
 			config = new HashMap<>();
 		}
 		config.put("maxSplitTime", maxSplitTime);
 	}
-	
+
 	public static void setMinSplitTimeDuration(int minSplitTimeDuration) {
-		if(config == null){
+		if (config == null) {
 			config = new HashMap<>();
 		}
 		config.put("minSplitTimeDuration", minSplitTimeDuration);
 	}
 
 	public static void setFFMPEGPath(String pathFFMPEG) {
-		if(config == null){
+		if (config == null) {
 			config = new HashMap<>();
 		}
 		config.put("pathFFMPEG", pathFFMPEG);
 	}
-	
+
 	public static void setFFProbePath(String pathFFProbe) {
-		if(config == null){
+		if (config == null) {
 			config = new HashMap<>();
 		}
 		config.put("pathFFProbe", pathFFProbe);
 	}
 
-	public static void setPathVideoInput(String pathInputFile ) {
-		if(config == null){
+	public static void setPathVideoInput(String pathInputFile) {
+		if (config == null) {
 			config = new HashMap<>();
 		}
 		config.put("pathInputFile", pathInputFile);
 	}
 
 	public static void setPathVideoOutput(String pathOutputFile) {
-		if(config == null){
+		if (config == null) {
 			config = new HashMap<>();
 		}
 		config.put("pathOutputFile", pathOutputFile);
 	}
 
 	public static void setPathVideoSplittedInput(String pathSplittedInputFile) {
-		if(config == null){
+		if (config == null) {
 			config = new HashMap<>();
 		}
 		config.put("pathSplittedInputFile", pathSplittedInputFile);
 	}
 
 	public static void setPathVideoSplittedOutput(String pathSplittedOutputFile) {
-		if(config == null){
+		if (config == null) {
 			config = new HashMap<>();
 		}
 		config.put("pathSplittedOutputFile", pathSplittedOutputFile);
 	}
 
 	public static void setListFileName(String listFileName) {
-		if(config == null){
+		if (config == null) {
 			config = new HashMap<>();
 		}
 		config.put("listFileName", listFileName);

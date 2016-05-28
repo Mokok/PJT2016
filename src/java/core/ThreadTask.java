@@ -9,6 +9,7 @@ import core.exception.InvalidPreviousThreadTaskException;
 import core.worker.ConcatTask;
 import core.worker.CoreTask;
 import core.worker.SplitTask;
+import core.worker.TaskStatus;
 import core.worker.TranscodeTask;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,18 +25,17 @@ import java.util.logging.Logger;
  * @author Mokok
  */
 public final class ThreadTask extends Thread {
-	
-	
+
 	private Process proc;
 	private CoreTask task;
 	private List<ThreadTaskEndListener> listeners;
-	
-	public ThreadTask(){
+
+	public ThreadTask() {
 		super();
 		listeners = new ArrayList<>();
 	}
-	
-	public ThreadTask(CoreTask task){
+
+	public ThreadTask(CoreTask task) {
 		this();
 		insertTask(task);
 	}
@@ -71,24 +71,36 @@ public final class ThreadTask extends Thread {
 	}
 
 	private void processTask() {
-		try {
+		/*try {
 			Runtime runtime = Runtime.getRuntime();
 			
 			proc = runtime.exec(this.getTask().computeCmd());
-			
-			//monitor(proc);
+			//listen(proc);
 			
 			proc.waitFor();
 			for (ThreadTaskEndListener listener : listeners) {
 				listener.processFinished(this);
 			}
 		} catch (IOException | InterruptedException | InvalidPreviousThreadTaskException ex) {
+			this.getTask().setStatus(TaskStatus.CANCELLED);
 			Logger.getLogger(ThreadTask.class.getName()).log(Level.SEVERE, null, ex);
 		}
-
+		 */
+		Thread th;
+		try {
+			th = new Thread(new SSHExecutor(this.getTask().computeCmd()));
+			th.start();
+			th.join();
+			for (ThreadTaskEndListener listener : listeners) {
+				listener.processFinished(this);
+			}
+		} catch (IOException | InvalidPreviousThreadTaskException | InterruptedException ex) {
+			this.getTask().setStatus(TaskStatus.CANCELLED);
+			Logger.getLogger(ThreadTask.class.getName()).log(Level.SEVERE, null, ex);
+		}
 	}
-	
-	private void monitor(Process proc){
+
+	private void listenProc(Process proc) {
 		try {
 			BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 			BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
@@ -107,16 +119,16 @@ public final class ThreadTask extends Thread {
 			Logger.getLogger(ThreadTask.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
-	
-	Process getProc(){
+
+	Process getProc() {
 		return proc;
 	}
-	
-	public void addListener(ThreadTaskEndListener listener){
-		 listeners.add(listener);
+
+	public void addListener(ThreadTaskEndListener listener) {
+		listeners.add(listener);
 	}
-	
-	public void removeListener(ThreadTaskEndListener listener){
-		 listeners.remove(listener);
+
+	public void removeListener(ThreadTaskEndListener listener) {
+		listeners.remove(listener);
 	}
 }

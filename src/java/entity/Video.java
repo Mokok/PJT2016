@@ -120,8 +120,6 @@ public class Video implements Serializable {
 		return clone;
 	}
 
-	
-	
 	/* (non-Javadoc)
      * @see java.lang.Object#equals(java.lang.Object)
 	 */

@@ -16,12 +16,12 @@ import stateless.LocalConfig;
  * @author Mokok
  */
 public class TranscodeTask extends CoreTask {
-	
+
 	private static final String OPTIONS = " -c copy -map 0 ";
-	
+
 	public TranscodeTask() {
 	}
-	
+
 	public TranscodeTask(Video video) {
 		super(video);
 	}
@@ -60,7 +60,7 @@ public class TranscodeTask extends CoreTask {
 			outPath.append(".");
 			outPath.append(getVideo().getExtOutput());
 			strBld.append(outPath.toString());
-		}		
+		}
 		return strBld.toString();
 	}
 }

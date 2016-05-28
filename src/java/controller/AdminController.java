@@ -34,7 +34,7 @@ public class AdminController {
 	private ConfigDAO configDAO;
 
 	private String res;
-	
+
 	/**
 	 * Creates a new instance of AdminController
 	 */
@@ -55,26 +55,26 @@ public class AdminController {
 		}
 	}
 
-	public void testComputeCmd() throws IOException{
+	public void testComputeCmd() throws IOException {
 		res = splitBean.testComputeCmd();
 	}
-	
-	public void testDuration(){
+
+	public void testDuration() {
 		res = splitBean.testDuration();
 	}
-	
-	public void testSplit(){
+
+	public void testSplit() {
 		try {
 			splitBean.testSplit();
 		} catch (InterruptedException ex) {
 			Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
-	
-	public String displayRes(){
+
+	public String displayRes() {
 		return res;
 	}
-	
+
 	/**
 	 * @return the configDAO
 	 */
@@ -82,10 +82,10 @@ public class AdminController {
 		return configDAO;
 	}
 
-	public void init(){
+	public void init() {
 		splitBean.init();
 	}
-	
+
 	private void initConfig() {
 		LocalConfig.setMaxSplitTime(configDAO.getMaxSplitTime());
 		LocalConfig.setMinSplitTimeDuration(configDAO.getMinSplitTimeDuration());

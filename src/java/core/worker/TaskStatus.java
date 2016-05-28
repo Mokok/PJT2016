@@ -10,5 +10,5 @@ package core.worker;
  * @author Mokok
  */
 public enum TaskStatus {
-	NOT_STARTED,IN_PROGRESS,DONE,CANCELLED
+	NOT_STARTED, IN_PROGRESS, DONE, CANCELLED
 }

@@ -17,7 +17,7 @@ import stateless.LocalConfig;
  * @author Mokok
  */
 public class SplitTask extends CoreTask {
-	
+
 	private static final String OPTIONS = "-f segment ";
 	private static final String OPTIONS2 = " -segment_list ";
 	private static final String OPTIONS3 = " -reset_timestamps 1 -c copy -map 0 ";
@@ -104,32 +104,33 @@ public class SplitTask extends CoreTask {
 	}
 
 	/**
-	 * used to compute the list of split timers
-	 * Max : LocalConfig.maxSplitTime | Min : LocalConfig.minSplitTimeDuration
-	 * @return list of times to split 
+	 * used to compute the list of split timers Max : LocalConfig.maxSplitTime |
+	 * Min : LocalConfig.minSplitTimeDuration
+	 *
+	 * @return list of times to split
 	 */
-	private String computeSplitTimers(){
+	private String computeSplitTimers() {
 		StringBuilder timers = new StringBuilder();
 		int maxSplitTime = LocalConfig.getMaxSplitTime();
 		int minSplitTimeDuration = LocalConfig.getMinSplitTimeDuration();
 		int videoDuration = WorkerUtils.getVideoDuration(getVideo());
-		int numberOfSlice = Integer.min(maxSplitTime, videoDuration/minSplitTimeDuration);
-		
-		if(numberOfSlice != 0){
-			int splitDuration = videoDuration/numberOfSlice;
+		int numberOfSlice = Integer.min(maxSplitTime, videoDuration / minSplitTimeDuration);
+
+		if (numberOfSlice != 0) {
+			int splitDuration = videoDuration / numberOfSlice;
 			timers.append(splitDuration);
-			for(int i = 2 ; i < numberOfSlice ; i++){
+			for (int i = 2; i < numberOfSlice; i++) {
 				timers.append(",");
-				timers.append(String.valueOf(splitDuration*i));
+				timers.append(String.valueOf(splitDuration * i));
 			}
 		}
-				
+
 		return timers.toString();
 	}
-	
-	private String computeSplitTimer(){
-		float duration = WorkerUtils.getVideoDuration(getVideo());
-		video.setDuration(duration);
-		return String.valueOf(Integer.max(duration)/LocalConfig.getMaxSplitTime(), LocalConfig.getMinSplitTimeDuration()));
+
+	private String computeSplitTimer() {
+		int duration = WorkerUtils.getVideoDuration(getVideo());
+		//video.setDuration(duration);
+		return String.valueOf(Integer.max(duration / LocalConfig.getMaxSplitTime(), LocalConfig.getMinSplitTimeDuration()));
 	}
 }

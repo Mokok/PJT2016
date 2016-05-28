@@ -30,6 +30,7 @@ import stateless.LocalConfig;
  * @author Mokok
  */
 public abstract class WorkerUtils {
+
 	public static int getVideoDuration(Video video) {
 		StringBuilder strCmd = new StringBuilder();
 		strCmd.append(LocalConfig.getFFProbePath());
@@ -39,13 +40,12 @@ public abstract class WorkerUtils {
 		strCmd.append(video.getUser().getId());
 		strCmd.append("\\");
 		strCmd.append(video.getFullNameInput());
-		
-		
+
 		Runtime runtime = Runtime.getRuntime();
 		StringBuilder strBld = new StringBuilder();
 		try {
 			Process proc = runtime.exec(strCmd.toString());
-			
+
 			BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 			BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
 
@@ -71,7 +71,7 @@ public abstract class WorkerUtils {
 		}
 		return (int) Math.floor(Float.valueOf(strBld.toString().trim()));
 	}
-	
+
 	static File reformatList(Video video) throws FileNotFoundException {
 		StringBuilder strBld = new StringBuilder();
 		//get the list file
@@ -96,13 +96,13 @@ public abstract class WorkerUtils {
 			BufferedReader br = new BufferedReader(fr);
 			try {
 				String line = br.readLine();
-				while(line != null){
+				while (line != null) {
 					strBld.append(line);
 					strBld.append("\n");
 					line = br.readLine();
 				}
 				fr.close();
-			} catch (FileNotFoundException e){
+			} catch (FileNotFoundException e) {
 				System.out.println("File was not found!");
 			} catch (IOException ex) {
 				Logger.getLogger(SplitTask.class.getName()).log(Level.SEVERE, null, ex);
@@ -123,8 +123,8 @@ public abstract class WorkerUtils {
 			Pattern pattern = Pattern.compile("(file )([a-zA-Z0-9_.-]+\\.\\w{3,5})[\\s\n]+");
 			Matcher matcher = pattern.matcher(fileStr);
 			String temp = strBld.toString().replaceAll("\\\\", "/");
-			while(matcher.find()){
-				matcher.appendReplacement(result, matcher.group(1)+temp+matcher.group(2)+"\n");
+			while (matcher.find()) {
+				matcher.appendReplacement(result, matcher.group(1) + temp + matcher.group(2) + "\n");
 			}
 		}
 		//Writting the file
@@ -136,11 +136,11 @@ public abstract class WorkerUtils {
 		}
 		return file;
 	}
-	
+
 	static List<TranscodeTask> generateListOfTranscodeTasks(final Video video) throws FileNotFoundException {
 		File fileList = reformatList(video);
 		ArrayList<TranscodeTask> list = new ArrayList<>();
-		
+
 		//read the fileList and create dedicated TranscodeTask
 		{
 			StringBuilder strBld = new StringBuilder();
@@ -150,13 +150,13 @@ public abstract class WorkerUtils {
 				BufferedReader br = new BufferedReader(fr);
 				try {
 					String line = br.readLine();
-					while(line != null){
+					while (line != null) {
 						strBld.append(line);
 						strBld.append("\n");
 						line = br.readLine();
 					}
 					fr.close();
-				} catch (FileNotFoundException e){
+				} catch (FileNotFoundException e) {
 					System.out.println("File was not found!");
 				} catch (IOException ex) {
 					Logger.getLogger(SplitTask.class.getName()).log(Level.SEVERE, null, ex);
@@ -170,13 +170,13 @@ public abstract class WorkerUtils {
 			//store the original nameInput to be use to compute storage path with the name on the video
 			tempVideo.setNameOutput(originalName);
 			TranscodeTask tTask;
-			while(matcher.find()){
+			while (matcher.find()) {
 				tempName = matcher.group(1);
 				tempName = Paths.get(tempName).getFileName().toString();
 				tempVideo.setNameInput(tempName);
 				tTask = new TranscodeTask(tempVideo);
 				list.add(tTask);
-				
+
 				//Create a new instance of video for the next task
 				tempVideo = tempVideo.clone();
 			}

@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  * @author Mokok
  */
 public class ThreadManager implements Runnable {
-	
+
 	private final int poolSize;
 	private final ThreadPoolExecutor executor;
 
@@ -27,7 +27,7 @@ public class ThreadManager implements Runnable {
 		this(10);
 	}
 
-	public ThreadManager(int maxNumberOfWorker) {				
+	public ThreadManager(int maxNumberOfWorker) {
 		poolSize = maxNumberOfWorker;
 		//RejectedExecutionHandler implementation
 		RejectedExecutionHandlerImpl rejectionHandler = new RejectedExecutionHandlerImpl();
@@ -36,7 +36,7 @@ public class ThreadManager implements Runnable {
 		//creating the ThreadPoolExecutor
 		executor = new ThreadPoolExecutor(poolSize, poolSize, 60 * 2, TimeUnit.SECONDS, new ArrayBlockingQueue<>(50, true), threadFactory, rejectionHandler);
 	}
-	
+
 	public int getPoolSize() {
 		return poolSize;
 	}
@@ -45,8 +45,9 @@ public class ThreadManager implements Runnable {
 		return executor;
 	}
 
-	/** Warning !
-	 * 
+	/**
+	 * Warning !
+	 *
 	 */
 	@Override
 	public void run() {
@@ -63,7 +64,7 @@ public class ThreadManager implements Runnable {
 	void execute(ThreadTask thread) {
 		executor.execute(thread);
 	}
-	
+
 	public void stop() {
 		executor.shutdown();
 		while (!executor.isTerminated()) {

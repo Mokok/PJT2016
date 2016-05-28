@@ -13,14 +13,14 @@ import java.io.IOException;
  * @author Mokok
  */
 public class CoreTask implements ITask {
-		
+
 	private final Video video;
 	private static final String OPTIONS = "";
 	private TaskStatus status = TaskStatus.NOT_STARTED;
-	
+
 	public CoreTask() {
 		video = null;
-	}	
+	}
 
 	public CoreTask(Video video) {
 		this.video = video;
@@ -35,20 +35,20 @@ public class CoreTask implements ITask {
 	public Video getVideo() {
 		return video;
 	}
-	
-	public void setStatus(TaskStatus newStatus){
+
+	public void setStatus(TaskStatus newStatus) {
 		status = newStatus;
 	}
-	
-	public TaskStatus getStatus(){
+
+	public TaskStatus getStatus() {
 		return status;
 	}
-	
+
 	/*public void setConfig(ConfigDAO configDAO){
 		config = configDAO;
 	}*/
 
-	/*@Override
+ /*@Override
 	public final String toString() {
 		String res = null;
 		try {

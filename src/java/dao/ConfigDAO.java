@@ -25,12 +25,12 @@ public class ConfigDAO {
 
 	@PersistenceContext(unitName = "CorePU")
 	private EntityManager em;
-	
+
 	public int getMaxSplitTime() {
 		Config config = (Config) em.createNamedQuery("maxSplitTime", Config.class).getSingleResult();
 		return Integer.parseInt(config.getVal());
 	}
-	
+
 	public int getMinSplitTimeDuration() {
 		Config config = (Config) em.createNamedQuery("minSplitTimeDuration", Config.class).getSingleResult();
 		return Integer.parseInt(config.getVal());
@@ -40,7 +40,7 @@ public class ConfigDAO {
 		Config config = (Config) em.createNamedQuery("pathFFMPEG", Config.class).getSingleResult();
 		return config.getVal();
 	}
-	
+
 	public String getFFProbePath() {
 		Config config = (Config) em.createNamedQuery("pathFFProbe", Config.class).getSingleResult();
 		return config.getVal();
@@ -70,7 +70,7 @@ public class ConfigDAO {
 		Config config = (Config) em.createNamedQuery("listFileName", Config.class).getSingleResult();
 		return config.getVal();
 	}
-	
+
 	private Config setMinSplitTimeDuration(int seconds) throws Exception {
 		if (seconds <= 0) {
 			throw new Exception("le temps en seconde doit être positif");
@@ -117,7 +117,7 @@ public class ConfigDAO {
 		em.persist(config);
 		return config;
 	}
-	
+
 	public Config setFFProbePath(String path) {
 		Config config;
 		try {
@@ -199,16 +199,16 @@ public class ConfigDAO {
 	public List<Config> getConfigList() {
 		return em.createNamedQuery("listConfig", Config.class).getResultList();
 	}
-	
+
 	public void setDefaultConfig() throws Exception {
-			this.setMaxSplitTime(15);
-			this.setMinSplitTimeDuration(600);
-			this.setFFMPEGPath("E:\\ffmpeg\\bin\\ffmpeg");
-			this.setFFProbePath("E:\\ffmpeg\\bin\\ffprobe");
-			this.setPathVideoInput("E:\\FILES\\VideoInput\\");
-			this.setPathVideoOutput("E:\\FILES\\VideoOutput\\");
-			this.setPathVideoSplittedInput("E:\\FILES\\VideoSplitted\\Input\\");
-			this.setPathVideoSplittedOutput("E:\\FILES\\VideoSplitted\\Output\\");
-			this.setListFileName("list.ffconcat");
+		this.setMaxSplitTime(15);
+		this.setMinSplitTimeDuration(600);
+		this.setFFMPEGPath("E:\\ffmpeg\\bin\\ffmpeg");
+		this.setFFProbePath("E:\\ffmpeg\\bin\\ffprobe");
+		this.setPathVideoInput("E:\\FILES\\VideoInput\\");
+		this.setPathVideoOutput("E:\\FILES\\VideoOutput\\");
+		this.setPathVideoSplittedInput("E:\\FILES\\VideoSplitted\\Input\\");
+		this.setPathVideoSplittedOutput("E:\\FILES\\VideoSplitted\\Output\\");
+		this.setListFileName("list.ffconcat");
 	}
 }

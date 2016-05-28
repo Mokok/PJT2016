@@ -6,6 +6,7 @@
 package core.worker;
 
 import entity.Video;
+import java.io.File;
 import java.io.FileNotFoundException;
 import stateless.LocalConfig;
 
@@ -14,7 +15,7 @@ import stateless.LocalConfig;
  * @author Mokok
  */
 public class ConcatTask extends CoreTask {
-			
+
 	private static final String OPTIONS = "  -c copy -map 0 -y ";
 
 	public ConcatTask() {
@@ -49,6 +50,7 @@ public class ConcatTask extends CoreTask {
 			outPath.append(LocalConfig.getPathVideoOutput());
 			outPath.append(getVideo().getUser().getId());
 			outPath.append("\\");
+			new File(outPath.toString()).mkdirs();
 			outPath.append(getVideo().getFullNameOutput());
 			strBld.append(outPath.toString());
 		}

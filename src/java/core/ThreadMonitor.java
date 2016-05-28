@@ -31,7 +31,7 @@ public class ThreadMonitor implements Runnable {
 	public boolean isRunning() {
 		return this.run;
 	}
-	
+
 	@Override
 	public void run() {
 		while (run) {

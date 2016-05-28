@@ -18,20 +18,20 @@ import java.util.EventListener;
  * @author Mokok
  */
 public class ThreadTaskEndListener implements EventListener {
-	
+
 	private final ThreadCoordinator coordinator;
-	
+
 	ThreadTaskEndListener(ThreadCoordinator coord) {
 		coordinator = coord;
 	}
 
-	void processFinished(ThreadTask thread) throws InvalidPreviousThreadTaskException, FileNotFoundException{
+	void processFinished(ThreadTask thread) throws InvalidPreviousThreadTaskException, FileNotFoundException {
 		thread.getTask().setStatus(TaskStatus.DONE);
-		if(thread.getTask() instanceof SplitTask){
+		if (thread.getTask() instanceof SplitTask) {
 			coordinator.videoSubmitProcessStep2(thread);
-		}else if(thread.getTask() instanceof TranscodeTask){
+		} else if (thread.getTask() instanceof TranscodeTask) {
 			coordinator.videoSubmitProcessStep3(thread);
-		}else if(thread.getTask() instanceof ConcatTask){
+		} else if (thread.getTask() instanceof ConcatTask) {
 			coordinator.videoSubmitProcessStep4(thread);
 		}
 	}

@@ -14,5 +14,5 @@ public class InvalidPreviousThreadTaskException extends Exception {
 	public InvalidPreviousThreadTaskException(String message) {
 		super(message);
 	}
-	
+
 }

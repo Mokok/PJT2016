@@ -9,7 +9,6 @@ import core.ThreadCoordinator;
 import core.ThreadManager;
 import core.ThreadMonitor;
 import core.ThreadTask;
-import core.worker.ConcatTask;
 import core.worker.CoreTask;
 import core.worker.SplitTask;
 import java.io.IOException;
@@ -33,20 +32,20 @@ import javax.ejb.LocalBean;
 @Stateless
 @LocalBean
 public class FileOperationBean {
-	
+
 	private Video video;
 	private User user;
 
 	@EJB
 	private ConfigDAO configDAO;
-	
+
 	@PostConstruct
-	public void init(){
+	public void init() {
 		video = new Video();
 		video.setExtInput("avi");
 		video.setNameInput("test3");
 		video.setExtOutput("mp4");
-		video.setNameOutput(video.getNameInput()+"_transcoded");
+		video.setNameOutput(video.getNameInput() + "_transcoded");
 
 		user = new User();
 		user.setId(1);
@@ -55,15 +54,15 @@ public class FileOperationBean {
 		video.setUser(user);
 	}
 
-	public String testComputeCmd() throws IOException {		
-		System.out.println("computeCmd");		
-		CoreTask task = new ConcatTask(video);
+	public String testComputeCmd() throws IOException {
+		System.out.println("computeCmd");
+		CoreTask task = new SplitTask(video);
 		ThreadTask worker = ThreadTask.createNewThreadTask(task);
 		//task.setConfig(configDAO);
 		return task.computeCmd();
 	}
 
-	public String testDuration() {		
+	public String testDuration() {
 		StringBuilder strCmd = new StringBuilder();
 		strCmd.append(configDAO.getFFProbePath());
 		strCmd.append(" -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 ");
@@ -72,13 +71,12 @@ public class FileOperationBean {
 		strCmd.append(video.getUser().getId());
 		strCmd.append("\\");
 		strCmd.append(video.getFullNameInput());
-		
-		
+
 		Runtime runtime = Runtime.getRuntime();
 		StringBuilder strBld = new StringBuilder();
 		try {
 			Process proc = runtime.exec(strCmd.toString());
-			
+
 			BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 			BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
 
