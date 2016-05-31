@@ -30,26 +30,47 @@ public final class ThreadTask extends Thread {
 	private CoreTask task;
 	private List<ThreadTaskEndListener> listeners;
 
+	/**
+	 * Default empty #ThreadTask constructor
+	 */
 	public ThreadTask() {
 		super();
 		listeners = new ArrayList<>();
 	}
 
+	/**
+	 *
+	 * @param task #CoreTask to be wrapped in the thread
+	 */
 	public ThreadTask(CoreTask task) {
 		this();
 		insertTask(task);
 	}
 
+	/**
+	 * Alternative way to link a #CoreTask to the ThreadTask
+	 *
+	 * @param task
+	 */
 	public void insertTask(CoreTask task) {
 		this.task = task;
 		//task.setConfig(config);
 	}
 
+	/**
+	 *
+	 * @param task #CoreTask to be wrapped in the thread
+	 * @return a #ThreadTask with the #CoreTask wrapped in it
+	 */
 	public static ThreadTask createNewThreadTask(CoreTask task) {
 		ThreadTask result = new ThreadTask(task);
 		return result;
 	}
 
+	/**
+	 *
+	 * @return the #CoreTask
+	 */
 	public CoreTask getTask() {
 		return task;
 	}
@@ -71,12 +92,12 @@ public final class ThreadTask extends Thread {
 	}
 
 	private void processTask() {
-		/*try {
+		try {
 			Runtime runtime = Runtime.getRuntime();
-			
+
 			proc = runtime.exec(this.getTask().computeCmd());
 			//listen(proc);
-			
+
 			proc.waitFor();
 			for (ThreadTaskEndListener listener : listeners) {
 				listener.processFinished(this);
@@ -85,7 +106,8 @@ public final class ThreadTask extends Thread {
 			this.getTask().setStatus(TaskStatus.CANCELLED);
 			Logger.getLogger(ThreadTask.class.getName()).log(Level.SEVERE, null, ex);
 		}
-		 */
+
+		/*
 		Thread th;
 		try {
 			th = new Thread(new SSHExecutor(this.getTask().computeCmd()));
@@ -97,7 +119,7 @@ public final class ThreadTask extends Thread {
 		} catch (IOException | InvalidPreviousThreadTaskException | InterruptedException ex) {
 			this.getTask().setStatus(TaskStatus.CANCELLED);
 			Logger.getLogger(ThreadTask.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		}*/
 	}
 
 	private void listenProc(Process proc) {
@@ -124,10 +146,20 @@ public final class ThreadTask extends Thread {
 		return proc;
 	}
 
+	/**
+	 * add a listener, popped up when the Thread ends
+	 *
+	 * @param listener
+	 */
 	public void addListener(ThreadTaskEndListener listener) {
 		listeners.add(listener);
 	}
 
+	/**
+	 * add a listener, popped up when the Thread ends
+	 *
+	 * @param listener
+	 */
 	public void removeListener(ThreadTaskEndListener listener) {
 		listeners.remove(listener);
 	}

@@ -15,6 +15,11 @@ import java.nio.file.NotDirectoryException;
  */
 public abstract class FileUtils {
 
+	/**
+	 *
+	 * @param f file or directory to be (recursively) deleted
+	 * @throws IOException
+	 */
 	public static void delete(File f) throws IOException {
 		if (f.isDirectory()) {
 			for (File c : f.listFiles()) {
@@ -25,6 +30,11 @@ public abstract class FileUtils {
 		}
 	}
 
+	/**
+	 *
+	 * @param d directory to be emptied
+	 * @throws IOException
+	 */
 	public static void resetFolder(File d) throws IOException {
 		if (d.isDirectory()) {
 			delete(d);

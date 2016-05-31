@@ -14,8 +14,17 @@ import java.io.IOException;
  */
 public interface ITask {
 
+	/**
+	 *
+	 * @return the complete command line to be executed
+	 * @throws IOException
+	 */
 	public String computeCmd() throws IOException;
 
+	/**
+	 *
+	 * @return the video
+	 */
 	public Video getVideo();
 
 }

@@ -31,6 +31,11 @@ import stateless.LocalConfig;
  */
 public abstract class WorkerUtils {
 
+	/**
+	 *
+	 * @param video
+	 * @return the video duration
+	 */
 	public static int getVideoDuration(Video video) {
 		StringBuilder strCmd = new StringBuilder();
 		strCmd.append(LocalConfig.getFFProbePath());

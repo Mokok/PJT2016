@@ -19,15 +19,27 @@ public class ThreadMonitor implements Runnable {
 	private final int seconds;
 	private boolean run = true;
 
+	/**
+	 *
+	 * @param executor from the #ThreadManager
+	 * @param delay gap in seconds between 2 calls for pool's informations
+	 */
 	public ThreadMonitor(ThreadPoolExecutor executor, int delay) {
 		this.executor = executor;
 		this.seconds = delay;
 	}
 
+	/**
+	 * call for stoping the monitor
+	 */
 	public void stop() {
 		this.run = false;
 	}
 
+	/**
+	 *
+	 * @return true if monitor is running, false otherwise
+	 */
 	public boolean isRunning() {
 		return this.run;
 	}

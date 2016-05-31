@@ -18,13 +18,20 @@ public class ConcatTask extends CoreTask {
 
 	private static final String OPTIONS = "  -c copy -map 0 -y ";
 
-	public ConcatTask() {
-	}
-
+	/**
+	 * Constructor
+	 *
+	 * @param video
+	 */
 	public ConcatTask(Video video) {
 		super(video);
 	}
 
+	/**
+	 *
+	 * @return the complete command line to be executed
+	 * @throws FileNotFoundException
+	 */
 	@Override
 	public String computeCmd() throws FileNotFoundException {
 		StringBuilder strBld = new StringBuilder();

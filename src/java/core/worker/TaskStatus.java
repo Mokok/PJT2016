@@ -10,5 +10,21 @@ package core.worker;
  * @author Mokok
  */
 public enum TaskStatus {
-	NOT_STARTED, IN_PROGRESS, DONE, CANCELLED
+
+	/**
+	 * task still not started
+	 */
+	NOT_STARTED,
+	/**
+	 * task in progress
+	 */
+	IN_PROGRESS,
+	/**
+	 * task done (with succes)
+	 */
+	DONE,
+	/**
+	 * task cancelled or error
+	 */
+	CANCELLED
 }

@@ -18,44 +18,53 @@ public class CoreTask implements ITask {
 	private static final String OPTIONS = "";
 	private TaskStatus status = TaskStatus.NOT_STARTED;
 
+	/**
+	 * Empty constructor, no use in usual cases
+	 */
 	public CoreTask() {
 		video = null;
 	}
 
+	/**
+	 *
+	 * @param video
+	 */
 	public CoreTask(Video video) {
 		this.video = video;
 	}
 
+	/**
+	 *
+	 * @return the complete command line to be executed
+	 * @throws IOException
+	 */
 	@Override
 	public String computeCmd() throws IOException {
 		return "echo CoreTask default output";
 	}
 
+	/**
+	 *
+	 * @return the video
+	 */
 	@Override
 	public Video getVideo() {
 		return video;
 	}
 
+	/**
+	 *
+	 * @param newStatus
+	 */
 	public void setStatus(TaskStatus newStatus) {
 		status = newStatus;
 	}
 
+	/**
+	 *
+	 * @return the task status (ended,canceled,..)
+	 */
 	public TaskStatus getStatus() {
 		return status;
 	}
-
-	/*public void setConfig(ConfigDAO configDAO){
-		config = configDAO;
-	}*/
-
- /*@Override
-	public final String toString() {
-		String res = null;
-		try {
-			res = this.computeCmd();
-		} catch (IOException ex) {
-			Logger.getLogger(CoreTask.class.getName()).log(Level.SEVERE, null, ex);
-		}
-		return res;
-	}*/
 }

@@ -11,19 +11,18 @@ import core.ThreadMonitor;
 import core.ThreadTask;
 import core.worker.CoreTask;
 import core.worker.SplitTask;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-
 import dao.ConfigDAO;
 import entity.User;
 import entity.Video;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 
 /**
  *

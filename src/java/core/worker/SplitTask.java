@@ -22,15 +22,16 @@ public class SplitTask extends CoreTask {
 	private static final String OPTIONS2 = " -segment_list ";
 	private static final String OPTIONS3 = " -reset_timestamps 1 -c copy -map 0 ";
 
+	/**
+	 *
+	 * @param video
+	 */
 	public SplitTask(Video video) {
 		super(video);
 	}
 
 	/**
-	 * [ffmpeg] -i [inputPath] -f segment -segment_times 10,20,30 -map 0 -vcodec
-	 * copy -acodec copy -segment_list [listFileName] [outputPath]
-	 *
-	 * @return complete string command, ready to be executed
+	 * @return the complete command line to be executed
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */

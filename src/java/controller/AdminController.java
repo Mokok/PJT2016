@@ -5,17 +5,14 @@
  */
 package controller;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.inject.Named;
-
 import dao.ConfigDAO;
-
-import javax.enterprise.context.RequestScoped;
-
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Named;
 import stateless.FileOperationBean;
 import stateless.LocalConfig;
 

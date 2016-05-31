@@ -23,10 +23,17 @@ public class ThreadManager implements Runnable {
 	private final int poolSize;
 	private final ThreadPoolExecutor executor;
 
+	/**
+	 * Set the pool size to a default 10
+	 */
 	public ThreadManager() {
 		this(10);
 	}
 
+	/**
+	 *
+	 * @param maxNumberOfWorker pool capacity
+	 */
 	public ThreadManager(int maxNumberOfWorker) {
 		poolSize = maxNumberOfWorker;
 		//RejectedExecutionHandler implementation
@@ -37,10 +44,18 @@ public class ThreadManager implements Runnable {
 		executor = new ThreadPoolExecutor(poolSize, poolSize, 60 * 2, TimeUnit.SECONDS, new ArrayBlockingQueue<>(50, true), threadFactory, rejectionHandler);
 	}
 
+	/**
+	 *
+	 * @return the pool size
+	 */
 	public int getPoolSize() {
 		return poolSize;
 	}
 
+	/**
+	 *
+	 * @return the pool executor
+	 */
 	public ThreadPoolExecutor getExecutor() {
 		return executor;
 	}
@@ -65,6 +80,9 @@ public class ThreadManager implements Runnable {
 		executor.execute(thread);
 	}
 
+	/**
+	 *
+	 */
 	public void stop() {
 		executor.shutdown();
 		while (!executor.isTerminated()) {

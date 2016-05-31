@@ -11,6 +11,12 @@ package core.exception;
  */
 public class InvalidPreviousThreadTaskException extends Exception {
 
+	/**
+	 * Standard exception called when a #CoreTask with a wrong dynamic type
+	 * called the #ThreadTaskEndListener
+	 *
+	 * @param message
+	 */
 	public InvalidPreviousThreadTaskException(String message) {
 		super(message);
 	}

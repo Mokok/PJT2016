@@ -19,13 +19,25 @@ public class TranscodeTask extends CoreTask {
 
 	private static final String OPTIONS = " -c copy -map 0 ";
 
+	/**
+	 *
+	 */
 	public TranscodeTask() {
 	}
 
+	/**
+	 *
+	 * @param video
+	 */
 	public TranscodeTask(Video video) {
 		super(video);
 	}
 
+	/**
+	 *
+	 * @return the complete command line to be executed
+	 * @throws IOException
+	 */
 	@Override
 	public String computeCmd() throws IOException {
 		StringBuilder strBld = new StringBuilder();
