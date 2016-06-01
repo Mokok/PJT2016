@@ -106,6 +106,7 @@ public abstract class WorkerUtils {
 					strBld.append("\n");
 					line = br.readLine();
 				}
+				br.close();
 				fr.close();
 			} catch (FileNotFoundException e) {
 				System.out.println("File was not found!");
@@ -138,6 +139,7 @@ public abstract class WorkerUtils {
 			pr.print("");
 			pr.append(result.toString());
 			pr.flush();
+			pr.close();
 		}
 		return file;
 	}
@@ -160,6 +162,7 @@ public abstract class WorkerUtils {
 						strBld.append("\n");
 						line = br.readLine();
 					}
+					br.close();
 					fr.close();
 				} catch (FileNotFoundException e) {
 					System.out.println("File was not found!");

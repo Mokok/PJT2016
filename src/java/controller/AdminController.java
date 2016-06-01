@@ -52,6 +52,10 @@ public class AdminController {
 		}
 	}
 
+	/**
+	 *
+	 * @throws IOException
+	 */
 	public void testComputeCmd() throws IOException {
 		res = splitBean.testComputeCmd();
 	}

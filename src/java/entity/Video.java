@@ -19,7 +19,7 @@ import javax.persistence.ManyToOne;
  * @author Anthony
  */
 @Entity
-public class Video implements Serializable {
+public class Video implements Serializable,Cloneable {
 
 	/**
 	 *
